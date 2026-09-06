@@ -37,7 +37,7 @@ sheet.replaceSync(css);
 export class YnPrefecturePicker extends YnElement {
   static formAssociated = true;
   static props = {
-    value:            { value: null },
+    value:            { value: null, reflect: false },
     selectionLevel:   { value: "prefecture" },
     multiple:         { type: "boolean", value: false },
     codeFormat:       { value: "jis" },

@@ -33,6 +33,8 @@ export const css = /* css */ `
   --_olW:      var(--prefecture-picker-map-outline-width, 8.5px);
   --_olHoverW: var(--prefecture-picker-map-outline-hover-width, 3.4px);
   --_hairline: var(--prefecture-picker-map-land-line-width, 1px);
+  --_mapMax:   var(--prefecture-picker-map-max-height, min(56vh, 500px));
+  --_listMax:  var(--prefecture-picker-list-max-height, 236px);
   --_popMin:   var(--prefecture-picker-popover-min-width, 272px);
   --_popMax:   var(--prefecture-picker-popover-max-width, 420px);
   font: inherit;
@@ -114,7 +116,7 @@ button, input { font: inherit; color: inherit; touch-action: manipulation }
 
 /* ---- 地図 ---- */
 .mapbox { background: var(--_sea); display: flex; justify-content: center; overflow: hidden }
-svg { display: block; width: 100%; height: auto; max-height: min(56vh, 500px) }
+svg { display: block; width: 100%; height: auto; max-height: var(--_mapMax) }
 .zoom { transform-box: view-box; transform-origin: 0 0;
   transition: transform var(--_zoomDur) cubic-bezier(.3,.8,.25,1) }
 .pref { fill: var(--tc); fill-opacity: .5; stroke: var(--_landline); stroke-width: var(--_hairline);
@@ -149,7 +151,7 @@ svg { display: block; width: 100%; height: auto; max-height: min(56vh, 500px) }
 .inset-hit.hot { fill: var(--_ink); fill-opacity: .07 }
 
 /* ---- 一覧 ---- */
-.list { max-height: 236px; overflow: auto; padding: 6px }
+.list { max-height: var(--_listMax); overflow: auto; padding: 6px }
 .group-head { font-size: 10.5px; letter-spacing: .08em; color: var(--_ink3); padding: 6px 8px 3px }
 .opt { display: flex; align-items: baseline; gap: 8px; width: 100%; padding: 6px 8px;
   border: 0; background: transparent; border-radius: 5px; cursor: pointer; text-align: left }

@@ -5,7 +5,7 @@
  * 300 行を超えたら Lit の再実装に近づいている兆候なので、その時点で方針を見直す。
  */
 export class YnElement extends HTMLElement {
-  /** @type {Record<string, {attr?: string, type?: 'string'|'number'|'boolean'|'json', value?: any}>} */
+  /** @type {Record<string, {attr?: string, type?: 'string'|'number'|'boolean'|'json', value?: any, reflect?: boolean}>} */
   static props = {};
 
   static get observedAttributes() {
@@ -15,11 +15,17 @@ export class YnElement extends HTMLElement {
   #state = {};
   #frame = 0;
   #ready = false;
+  #reflecting = false;
 
   constructor() {
     super();
     const props = this.constructor.props;
     for (const [key, def] of Object.entries(props)) {
+      // 定義前の要素にフレームワークが値を入れていることがある。
+      // そのまま defineProperty すると消えるので、いったん退避して後から入れ直す
+      const pending = Object.hasOwn(this, key) ? this[key] : undefined;
+      delete this[key];
+
       this.#state[key] = def.value;
       Object.defineProperty(this, key, {
         get: () => this.#state[key],
@@ -28,11 +34,14 @@ export class YnElement extends HTMLElement {
           this.#state[key] = v;
           // 属性・プロパティのどちらから来ても、ここ 1 か所を通る。
           // フレームワークはプロパティで値を渡すため、属性だけを見ていると取りこぼす
+          this.#reflect(key, def, v);
           this.propChanged?.(key, v);
           this.requestUpdate();
         },
         enumerable: true,
       });
+
+      if (pending !== undefined) this[key] = pending;
     }
   }
 
@@ -44,11 +53,33 @@ export class YnElement extends HTMLElement {
   }
 
   attributeChangedCallback(attr, _old, value) {
+    if (this.#reflecting) return;                  // 自分で書き戻した分は読み返さない
     const entry = Object.entries(this.constructor.props)
       .find(([k, d]) => (d.attr ?? toAttr(k)) === attr);
     if (!entry) return;
     const [key, def] = entry;
     this[key] = parse(value, def.type ?? "string", def.value);
+  }
+
+  /**
+   * プロパティの変更を属性へ書き戻す。
+   * CSS は :host([mode="inline"]) のように属性を見るため、
+   * Vue のようにプロパティで値を渡すフレームワークでは属性がないと何も効かない。
+   * 属性で表せない値（配列・オブジェクト・json 型）は対象外。
+   */
+  #reflect(key, def, v) {
+    const type = def.type ?? "string";
+    if (def.reflect === false || type === "json") return;
+    if (v !== null && typeof v === "object") return;
+    const attr = def.attr ?? toAttr(key);
+    this.#reflecting = true;
+    try {
+      if (type === "boolean") this.toggleAttribute(attr, !!v);
+      else if (v === null || v === undefined) this.removeAttribute(attr);
+      else this.setAttribute(attr, String(v));
+    } finally {
+      this.#reflecting = false;
+    }
   }
 
   /** 同じフレーム内の複数変更を 1 回の描画にまとめる（初回描画のあとだけ） */
