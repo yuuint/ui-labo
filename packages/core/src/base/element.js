@@ -15,7 +15,7 @@ export class YnElement extends HTMLElement {
   #state = {};
   #frame = 0;
   #ready = false;
-  #reflecting = false;
+  #reflectingAttr = null;
 
   constructor() {
     super();
@@ -53,7 +53,11 @@ export class YnElement extends HTMLElement {
   }
 
   attributeChangedCallback(attr, _old, value) {
-    if (this.#reflecting) return;                  // 自分で書き戻した分は読み返さない
+    // 自分で書き戻した「その属性」だけを無視する。
+    // setAttribute は [CEReactions] なので、その中で保留中の
+    // 別の属性のコールバックまで同期で流れてくる。まとめて止めると、
+    // HTML に書かれた 2 つ目以降の属性を丸ごと取りこぼす
+    if (this.#reflectingAttr === attr) return;
     const entry = Object.entries(this.constructor.props)
       .find(([k, d]) => (d.attr ?? toAttr(k)) === attr);
     if (!entry) return;
@@ -72,13 +76,14 @@ export class YnElement extends HTMLElement {
     if (def.reflect === false || type === "json") return;
     if (v !== null && typeof v === "object") return;
     const attr = def.attr ?? toAttr(key);
-    this.#reflecting = true;
+    const prev = this.#reflectingAttr;
+    this.#reflectingAttr = attr;
     try {
       if (type === "boolean") this.toggleAttribute(attr, !!v);
       else if (v === null || v === undefined) this.removeAttribute(attr);
       else this.setAttribute(attr, String(v));
     } finally {
-      this.#reflecting = false;
+      this.#reflectingAttr = prev;
     }
   }
 
