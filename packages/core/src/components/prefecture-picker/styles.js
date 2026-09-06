@@ -167,7 +167,7 @@ svg { display: block; width: 100%; height: auto; max-height: var(--_mapMax) }
 .empty { padding: 22px 10px; text-align: center; color: var(--_ink3); font-size: 12.5px }
 
 /* ---- 複数選択のフッタ ---- */
-.foot { display: flex; align-items: center; gap: 7px; padding: 8px 9px;
+.foot { display: flex; align-items: center; justify-content: flex-end; gap: 7px; padding: 8px 9px;
   border-top: 1px solid var(--_line); background: var(--_sunken) }
 .count { font-size: 11.5px; color: var(--_ink2); margin-right: auto;
   font-variant-numeric: tabular-nums }

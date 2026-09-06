@@ -209,6 +209,7 @@ API の `prefarea_code` をそのままキーにしない（API 側の採番変�
 | `searchable` | boolean | `true` | 絞り込み入力を出す（`"area"` では無効） |
 | `mode` | `"dropdown"` \| `"inline"` | `"dropdown"` | 表示のしかた |
 | `transition` | `"auto"` \| `"fade"` \| `"slide"` \| `"none"` | `"auto"` | 開閉の見せ方（`"inline"` では開閉が無い） |
+| `footer` | `"auto"` \| `"none"` \| `count` / `clear` / `done` の並び | `"auto"` | フッタに出す部品 |
 | `popoverMinWidth` | 長さ | `272px` | ポップオーバー幅の下限 |
 | `popoverMaxWidth` | 長さ | `420px` | ポップオーバー幅の上限 |
 | `name` | string | — | フォーム送信時のフィールド名（Web のみ） |
@@ -297,6 +298,28 @@ API の `prefarea_code` をそのままキーにしない（API 側の採番変�
 枠の高さから頭・検索欄・フッタ（合わせて約 130px）を引いた値を渡す。
 
 `layout` の切り替え、区切り、複数選択、拡大は `"dropdown"` と同じように働く。
+
+### フッタ — `footer`
+
+複数選択のときにパネル下端へ出る「N 件選択中／クリア／完了」の並びを決める。
+
+| 値 | 出るもの |
+|---|---|
+| `"auto"`（既定） | 単数選択なら何も出さない。複数選択なら `count clear done`。ただし `mode="inline"` では `count clear`（閉じるものが無いので「完了」を出さない） |
+| `"none"` | 何も出さない。フッタの枠ごと消える |
+| `count` / `clear` / `done` の並び | 空白区切りで並べたものだけを出す（例: `"count"` / `"count clear"` / `"clear done"`） |
+
+`"none"` は、埋め込み先が自前のクリア・確定ボタンを持つ画面のためにある。
+mapengu の検索条件パネルのように、Picker の外側に「条件クリア」「検索」がすでに
+並んでいる場合、Picker 側の「クリア」「完了」は重複した操作になる。
+
+- 並び順は書いた順ではなく `count` → `clear` → `done` で固定する。
+  フッタの並びが指定のたびに変わると、押し間違いの原因になるため
+- 知らない語だけを並べた場合と空文字は `"none"` と同じ（何も出さない）
+- `"auto"` 以外を指定した場合、単数選択でもフッタを出せる
+- `count` の文言は選択数のみを表す。上限などは持たない
+- `done` は `mode="inline"` では何もしない。並べても押せるが閉じるものが無いため、
+  `"inline"` で確定操作が要る場合は親側で `change` を受けて処理する
 
 ### レイアウト — `layout`
 
@@ -640,6 +663,9 @@ semantic 層のみを参照し、primitive を直接参照しない。
 - [x] `mode="inline"` で、選んでも外側を押しても閉じない
 - [x] `mode="inline"` は狭い画面でもシートにならず、その場に収まる
 - [x] `mode="inline"` でも値の受け渡しとフォーム参加が `"dropdown"` と同じに働く
+- [x] `footer="none"` でフッタが枠ごと消え、地図・一覧の高さが変わらない
+- [x] `footer` に並べた部品だけが、並べた順で出る
+- [x] `footer="auto"` かつ `mode="inline"` のとき「完了」が出ない
 - [x] `layout` × `selectionLevel` × `multiple` の全組み合わせで選択・解除ができる
       （一覧の項目が二重に結び付いていないこと）
 - [x] 地理的でない区切りのとき「地図」が無効化され、理由が分かる

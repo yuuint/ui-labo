@@ -52,6 +52,7 @@ export class YnPrefecturePicker extends YnElement {
     name:             { value: "" },
     transition:       { value: "auto" },
     mode:             { value: "dropdown" },
+    footer:           { value: "auto" },
     items:            { type: "json", value: null },
   };
 
@@ -78,6 +79,20 @@ export class YnPrefecturePicker extends YnElement {
 
   get #prefs() { return this.items ?? PREFECTURES; }
   get #isArea() { return this.selectionLevel === "area"; }
+  /**
+   * フッタに出す部品。"auto" は mode と multiple から決める。
+   * 埋め込み先が自前のクリア／完了を持つ場合は "none" にして丸ごと消す。
+   */
+  get #footParts() {
+    const raw = String(this.footer ?? "auto").trim();
+    if (raw === "none") return [];
+    if (raw === "auto") {
+      if (!this.multiple) return [];
+      // 常時表示では閉じるものが無いので「完了」を出さない
+      return this.#inline ? ["count", "clear"] : ["count", "clear", "done"];
+    }
+    return raw.split(/\s+/).filter((k) => k === "count" || k === "clear" || k === "done");
+  }
   get #group() { return grouping(this.grouping); }
   get #members() { const g = this.#group; return g ? members(g, this.#prefs) : {}; }
   #byCode(c) { return this.#prefs.find((p) => p.code === c); }
@@ -312,10 +327,13 @@ export class YnPrefecturePicker extends YnElement {
     if (this.searchable && !this.#isArea)
       h += `<div class="search-row"><input class="search" type="search" placeholder="とうきょう / tokyo / 東京" value="${esc(this.#query)}"></div>`;
     h += lay === "map" ? this.#mapHtml() : this.#listHtml();
-    if (this.multiple)
-      h += `<div class="foot"><span class="count">${this.#sel.length} 件選択中</span>`
-        + `<button class="fbtn" type="button" data-act="clear"${this.#sel.length ? "" : " disabled"}>クリア</button>`
-        + `<button class="fbtn primary" type="button" data-act="done">完了</button></div>`;
+    const foot = this.#footParts;
+    if (foot.length)
+      h += `<div class="foot">`
+        + (foot.includes("count") ? `<span class="count">${this.#sel.length} 件選択中</span>` : "")
+        + (foot.includes("clear") ? `<button class="fbtn" type="button" data-act="clear"${this.#sel.length ? "" : " disabled"}>クリア</button>` : "")
+        + (foot.includes("done") ? `<button class="fbtn primary" type="button" data-act="done">完了</button>` : "")
+        + `</div>`;
     p.innerHTML = h;
     p.setAttribute("aria-label", zoomed ? `${g.labels[this.#area]} の都道府県` : "都道府県を選ぶ");
 
