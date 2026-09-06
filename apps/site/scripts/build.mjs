@@ -10,7 +10,7 @@
  * spec を唯一のソースにしているため、仕様を直せばサイトも直る。
  * 逆にサイト側で表を手書きすると必ずずれるので、手書きしない。
  */
-import { readFileSync, writeFileSync, readdirSync, rmSync, mkdirSync, cpSync } from "node:fs";
+import { readFileSync, writeFileSync, readdirSync, rmSync, mkdirSync, cpSync, existsSync } from "node:fs";
 import { join } from "node:path";
 
 const HERE = new URL("..", import.meta.url).pathname;
@@ -155,5 +155,8 @@ for (const name of readdirSync(SRC)) {
 
 // GitHub Pages の Jekyll を止める。_ で始まる名前が消えるのを防ぐ
 writeFileSync(join(DIST, ".nojekyll"), "");
+
+// 独自ドメインは成果物に CNAME が無いと解除されることがある。src/CNAME を必須にする
+if (!existsSync(join(DIST, "CNAME"))) throw new Error("CNAME が無い（apps/site/src/CNAME）");
 
 console.log(`site  ${pages} ページ / spec ${list.length} 件から生成`);

@@ -22,7 +22,7 @@
   "scripts": {
     "test": "node --test test/*.test.mjs"
   },
-  "homepage": "https://yuuint.github.io/ui-labo/",
+  "homepage": "https://ui.ynetlabo.net/",
   "bugs": {
     "url": "https://github.com/yuuint/ui-labo/issues"
   },

@@ -24,7 +24,7 @@
     "./outline": "./dist/japan-outline.js",
     "./normalize": "./src/normalize.js"
   },
-  "homepage": "https://yuuint.github.io/ui-labo/",
+  "homepage": "https://ui.ynetlabo.net/",
   "bugs": {
     "url": "https://github.com/yuuint/ui-labo/issues"
   },

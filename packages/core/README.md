@@ -3,7 +3,7 @@
 [ui-labo](https://github.com/yuuint/ui-labo) のプレーン Web 実装。
 素の Custom Elements で書いており、ランタイム依存はありません。
 
-**[デモとドキュメント](https://yuuint.github.io/ui-labo/)**
+**[デモとドキュメント](https://ui.ynetlabo.net/)**
 
 ```sh
 npm install @ynetlabo/ui-core
@@ -26,7 +26,7 @@ CSS カスタムプロパティ経由なので、読み込むだけでテーマ�
 
 | 要素 | 仕様 |
 |---|---|
-| `<yn-prefecture-picker>` | [都道府県 Picker](https://yuuint.github.io/ui-labo/prefecture-picker.html) |
+| `<yn-prefecture-picker>` | [都道府県 Picker](https://ui.ynetlabo.net/prefecture-picker.html) |
 
 ## フレームワークから使う
 

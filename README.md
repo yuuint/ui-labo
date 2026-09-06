@@ -3,7 +3,7 @@
 ynetlabo の UI コンポーネント集。1 つの仕様とデザイントークンを、
 プレーン Web / Vue / Flutter / SwiftUI の 4 実装が共有します。
 
-**[サイト（デモとドキュメント）](https://yuuint.github.io/ui-labo/)**
+**[サイト（デモとドキュメント）](https://ui.ynetlabo.net/)**
 
 ## パッケージ
 
