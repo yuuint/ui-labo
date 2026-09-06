@@ -76,7 +76,7 @@ export function playground(picker, box, params) {
     if (!b) return;
     const k = b.closest("[data-k]").dataset.k;
     const attr = toAttr(k), v = b.dataset.v;
-    // boolean は属性の有無で表す。"false" を書くと真になってしまう
+    // 偽は属性を消して表す。="false" でも偽にはなるが、既定に戻したことが読みやすい
     if (v === "true") picker.setAttribute(attr, "");
     else if (v === "false") picker.removeAttribute(attr);
     else picker.setAttribute(attr, v);
