@@ -6,8 +6,13 @@
  * パッケージマネージャ自身はこれを防げない（ADR package-manager）。
  * この検査は pnpm を選ばなかったことの対価であり、外してはいけない。
  *
- * package.json の "ynetlabo": { "externalDeps": "none" } を宣言したパッケージは
- * 外部 import を 1 件も許さない（ADR plain-web-custom-elements の「依存ゼロ」）。
+ * package.json の "ynetlabo": { "externalDeps": ... } で厳しさを選べる。
+ *   "none"           外部 import を 1 件も許さない
+ *   "workspace-only" 自社ワークスペース（@ynetlabo/*）だけ許す。第三者ライブラリは不可
+ *   （未指定）       package.json に宣言されていれば許す
+ *
+ * ADR plain-web-custom-elements の「依存ゼロ」は第三者ライブラリを指す。
+ * 自社パッケージの参照はモノレポの内部構造であり、利用者の依存にはならない。
  */
 import { readFileSync, readdirSync, statSync, existsSync } from "node:fs";
 import { join, relative } from "node:path";
@@ -44,7 +49,7 @@ for (const group of ["packages", "apps"]) {
       ...Object.keys(pkg.peerDependencies ?? {}),
       ...Object.keys(pkg.optionalDependencies ?? {}),
     ]);
-    const zero = pkg.ynetlabo?.externalDeps === "none";
+    const mode = pkg.ynetlabo?.externalDeps ?? "declared";
 
     for (const file of walk(join(pkgDir, "src"))) {
       const code = readFileSync(file, "utf8");
@@ -55,8 +60,10 @@ for (const group of ["packages", "apps"]) {
         if (spec.startsWith("node:")) continue;                          // 組み込み
         const dep = bare(spec);
         const where = `${relative(ROOT, file)}`;
-        if (zero) {
+        if (mode === "none") {
           problems.push(`${pkg.name}: 依存ゼロのはずが "${spec}" を import (${where})`);
+        } else if (mode === "workspace-only" && !dep.startsWith("@ynetlabo/")) {
+          problems.push(`${pkg.name}: 第三者ライブラリ "${dep}" は使えません (${where})`);
         } else if (!declared.has(dep)) {
           problems.push(`${pkg.name}: package.json に無い "${dep}" を import (${where})`);
         }

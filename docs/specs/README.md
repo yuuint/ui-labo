@@ -7,7 +7,7 @@
 | 仕様 | status | web | vue | flutter | swiftui |
 |---|---|---|---|---|---|
 | [design-tokens](design-tokens.md) — デザイントークン | approved | - | - | - | - |
-| [prefecture-picker](prefecture-picker.md) — 都道府県 Picker | approved | none | none | none | none |
+| [prefecture-picker](prefecture-picker.md) — 都道府県 Picker | approved | draft | none | none | none |
 
 ## 運用ルール
 

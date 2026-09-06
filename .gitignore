@@ -4,3 +4,6 @@ node_modules/
 
 # 取得した元データ。生成物だけをコミットする（ADR data-snapshot-from-api / japan-map-geodata）
 packages/data/.cache/
+
+# ローカルのプレビュー設定（絶対パスを含むためコミットしない）
+.claude/launch.json

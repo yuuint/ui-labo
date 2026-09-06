@@ -1,32 +1,7 @@
-/** 検索キーの正規化とローマ字変換。仕様は spec `prefecture-picker` の「検索」節 */
-
-const O_DAN = "おこそとのほもよろごぞどぼぽょ";
-const E_DAN = "えけせてねへめれげぜでべぺぇ";
-
-/**
- * 1. NFKC / 2. 小文字化 / 3. カタカナ→ひらがな / 4. 長音の畳み込み / 5. 前後の空白除去
- *
- * 手順 4 は `ー` を除くだけでは足りない。日本語の長音は「とうきょう」（う）と
- * 「おおさか」（お）で表記が割れるため、母音に展開する方式ではどちらかが必ず外れる。
- * 畳んで「ときょ」「おさか」に寄せると、トーキョー / とうきょう / オーサカ / おおさか
- * がすべて同じ形に落ちる。
- */
-export function normalize(input) {
-  const s = input
-    .normalize("NFKC")
-    .toLowerCase()
-    .replace(/[ァ-ヶ]/g, (c) => String.fromCharCode(c.charCodeAt(0) - 0x60))
-    .replace(/ー/g, "")
-    .trim();
-  let out = "";
-  for (const ch of s) {
-    const prev = out[out.length - 1];
-    if (prev && O_DAN.includes(prev) && (ch === "う" || ch === "お")) continue;
-    if (prev && E_DAN.includes(prev) && (ch === "い" || ch === "え")) continue;
-    out += ch;
-  }
-  return out;
-}
+/** ローマ字変換と検索キーの組み立て。正規化そのものは src/normalize.js に置く
+ *  （生成側と実行側で実装が分かれるとズレるため） */
+export { normalize } from "../../src/normalize.js";
+import { normalize } from "../../src/normalize.js";
 
 const YOON = {
   きゃ:"kya",きゅ:"kyu",きょ:"kyo",しゃ:"sya",しゅ:"syu",しょ:"syo",
