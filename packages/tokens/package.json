@@ -1,0 +1,19 @@
+{
+  "name": "@ynetlabo/ui-tokens",
+  "version": "0.0.0",
+  "description": "ui-labo のデザイントークン（DTCG 2025.10）と、各プラットフォームへの変換",
+  "type": "module",
+  "license": "MIT",
+  "files": [
+    "dist",
+    "src",
+    "resolver.json"
+  ],
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node --test test/*.test.mjs"
+  },
+  "devDependencies": {
+    "style-dictionary": "^5.5.2"
+  }
+}

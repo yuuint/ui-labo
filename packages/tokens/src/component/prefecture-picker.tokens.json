@@ -1,0 +1,49 @@
+{
+  "$description": "部品固有。semantic のみを参照する。primitive を直接参照しない",
+  "prefecturePicker": {
+    "trigger": {
+      "$type": "color",
+      "bg":          { "$value": "{color.surface}" },
+      "border":      { "$value": "{color.line2}" },
+      "borderHover": { "$value": "{color.accent}" },
+      "text":        { "$value": "{color.ink}" },
+      "placeholder": { "$value": "{color.ink3}" },
+      "height":      { "$type": "dimension", "$value": "{size.control.height}" },
+      "radius":      { "$type": "dimension", "$value": "{radius.control}" }
+    },
+    "popover": {
+      "$type": "color",
+      "bg":       { "$value": "{color.surface}" },
+      "border":   { "$value": "{color.line2}" },
+      "radius":   { "$type": "dimension", "$value": "{radius.panel}" },
+      "minWidth": { "$type": "dimension", "$value": "{size.panel.min}" },
+      "maxWidth": { "$type": "dimension", "$value": "{size.panel.max}" },
+      "duration": { "$type": "duration",  "$value": "{motion.quick}" }
+    },
+    "sheet": {
+      "$type": "dimension",
+      "radius":    { "$value": "{radius.sheet}" },
+      "minTarget": { "$value": "{size.control.touch}" },
+      "duration":  { "$type": "duration", "$value": "{motion.sheet}" }
+    },
+    "map": {
+      "$type": "color",
+      "sea":          { "$value": "{color.sea}" },
+      "landLine":     { "$value": "{color.landLine}" },
+      "outline":      { "$value": "{color.ink}",  "$description": "選択中の外周" },
+      "outlineHover": { "$value": "{color.ink2}", "$description": "ホバー中の外周" },
+      "landLineWidth":     { "$type": "dimension", "$value": "{line.hair}" },
+      "fillDilate":        { "$type": "dimension", "$value": "{line.dilate}" },
+      "outlineWidth":      { "$type": "dimension", "$value": "{line.strong}" },
+      "outlineHoverWidth": { "$type": "dimension", "$value": "{line.emphasis}" },
+      "zoomDuration":      { "$type": "duration",  "$value": "{motion.zoom}" }
+    },
+    "option": {
+      "$type": "color",
+      "bg":           { "$value": "{color.surface}" },
+      "bgHover":      { "$value": "{color.sunken}" },
+      "bgSelected":   { "$value": "{color.accent}" },
+      "textSelected": { "$value": "{color.onAccent}" }
+    }
+  }
+}

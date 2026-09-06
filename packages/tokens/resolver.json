@@ -1,0 +1,48 @@
+{
+  "$schema": "https://tr.designtokens.org/resolver/",
+  "name": "ui-labo",
+  "description": "テーマの解決順。ファイル分割ではなく、この宣言が切り替えの正",
+  "sets": [
+    {
+      "name": "primitive",
+      "values": [
+        "src/primitive/color.tokens.json",
+        "src/primitive/dimension.tokens.json"
+      ]
+    },
+    {
+      "name": "semantic-shared",
+      "values": [
+        "src/semantic/shared.tokens.json"
+      ],
+      "description": "テーマで変わらない役割（寸法・線・モーション）"
+    },
+    {
+      "name": "component",
+      "values": [
+        "src/component/prefecture-picker.tokens.json"
+      ]
+    }
+  ],
+  "modifiers": [
+    {
+      "name": "theme",
+      "type": "enumerated",
+      "default": "light",
+      "values": {
+        "light": [
+          "src/semantic/light.tokens.json"
+        ],
+        "dark": [
+          "src/semantic/dark.tokens.json"
+        ]
+      }
+    }
+  ],
+  "order": [
+    "primitive",
+    "semantic-shared",
+    "theme",
+    "component"
+  ]
+}

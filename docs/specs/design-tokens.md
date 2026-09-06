@@ -1,7 +1,7 @@
 ---
 name: design-tokens
 title: デザイントークン
-status: draft
+status: approved
 ---
 
 # デザイントークン
@@ -38,15 +38,22 @@ W3C DTCG Design Tokens Format **v2025.10** に準拠する。
 
 3 層とし、**下の層は 1 つ上の層のみを参照する**。
 
-| 層 | ディレクトリ | 例 | 参照先 |
+| 層 | ファイル | 例 | 参照先 |
 |---|---|---|---|
-| primitive | `src/primitive/` | `color.blue.500`, `dimension.space.16` | なし（実値） |
-| semantic | `src/semantic/` | `color.action.primary`, `space.stack.md` | primitive のみ |
-| component | `src/component/` | `button.bg.hover`, `button.padding.inline` | semantic のみ |
+| primitive | `src/primitive/*.tokens.json` | `color.ai.600`, `space.4`, `stroke.thick` | なし（実値） |
+| semantic（共通） | `src/semantic/shared.tokens.json` | `size.control.height`, `line.strong`, `motion.zoom` | primitive のみ |
+| semantic（テーマ） | `src/semantic/{light,dark}.tokens.json` | `color.accent`, `color.area.1` | primitive のみ |
+| component | `src/component/*.tokens.json` | `prefecturePicker.map.outline` | semantic のみ |
 
-**コンポーネント実装が primitive を直接参照することを禁止する。**
+**component が primitive を直接参照することを禁止する。**
 semantic 層を絶縁体とすることで、semantic の差し替え＝全コンポーネントの変更、
 primitive の差し替え＝全テーマの変更、という 2 軸の独立を保つ。
+
+寸法・線幅・モーションも同じ規則に従う。色だけの規則ではない。
+テーマで変わらない役割は `semantic/shared.tokens.json` に置く。
+
+**この規則はビルドで検査する。** 破れているとビルドが通らない。
+規約として書くだけでは守れないため。
 
 ### 命名
 
@@ -70,12 +77,15 @@ light / dark および将来のブランド差分は、**DTCG Resolver Module** 
 ```
 packages/tokens/
 ├── src/
-│   ├── primitive/{color,dimension,typography,elevation,motion}.tokens.json
-│   ├── semantic/{color,space,typography}.tokens.json
+│   ├── primitive/{color,dimension}.tokens.json
+│   ├── semantic/shared.tokens.json          # テーマで変わらない役割
+│   ├── semantic/{light,dark}.tokens.json     # テーマで変わる役割
 │   └── component/<component>.tokens.json
-├── resolver.json          # light / dark / ブランドの解決順
-├── config.js              # Style Dictionary v5
-└── formats/               # Dart(ThemeExtension) / Swift のカスタム出力
+├── resolver.json          # 解決順とテーマの切り替え。これが正
+├── formats/oklch.mjs      # OKLCH → sRGB（Dart / Swift 向け）
+├── scripts/build.mjs      # 参照の解決に Style Dictionary v5 を使い、出力は自前で組む
+├── scripts/lib/layers.mjs # 3 層の参照方向の検査
+└── dist/                  # 生成物。手で編集しない
 ```
 
 ## 生成先
@@ -85,11 +95,18 @@ packages/tokens/
 
 | プラットフォーム | 生成先 | 形式 |
 |---|---|---|
-| プレーン Web | `packages/core/src/tokens/tokens.css` | CSS カスタムプロパティ（`@layer tokens`） |
-| プレーン Web | `packages/core/src/tokens/tokens.ts` | 型付き定数（JS から参照する用） |
-| Vue | （なし） | core の `tokens.css` をそのまま使う |
-| Flutter | `packages/flutter/lib/src/tokens/tokens.g.dart` | `ThemeExtension<T>` |
-| SwiftUI | `packages/swiftui/Sources/YnetlaboUI/Tokens/Tokens.g.swift` | 静的定数 + dynamic color provider |
+| プレーン Web | `dist/tokens.css` | CSS カスタムプロパティ（`@layer ui-labo.tokens`） |
+| プレーン Web | `dist/tokens.js` / `.d.ts` | 型付き定数（JS から参照する用） |
+| Vue | （なし） | `tokens.css` をそのまま使う |
+| Flutter | `dist/tokens.g.dart` | `ThemeExtension<YnTokens>`（`copyWith` / `lerp` つき） |
+| SwiftUI | `dist/Tokens.g.swift` | `YNTokens` 構造体 ＋ `of(_ scheme:)` |
+
+各プラットフォームのパッケージは、この `dist/` を取り込む。
+
+CSS は 1 ファイルに両テーマを収め、**素の `:root` にライト一式**を置いたうえで、
+`@media (prefers-color-scheme: dark)` を `:root:not([data-theme="light"])` で守り、
+`:root[data-theme="dark"]` でも再定義する。
+未指定・システム追従・明示指定の 3 状態すべてで値が決まるようにするため。
 
 ## 対象外
 
@@ -101,21 +118,21 @@ packages/tokens/
 `[x]` = 自動テスト・静的解析で確認できる / `[ ]` = 手動確認が残る
 
 ### 共通
-- [ ] `src/` 配下のすべてのファイルが DTCG v2025.10 のスキーマ検証を通る
-- [ ] component 層のトークンが primitive を直接参照していないことを検査するテストがある
-- [ ] 未解決の参照（存在しないトークンへの `{...}`）がビルドで失敗する
+- [x] `src/` 配下のすべてのファイルが DTCG v2025.10 のスキーマ検証を通る
+- [x] component 層のトークンが primitive を直接参照していないことを検査するテストがある
+- [x] 未解決の参照（存在しないトークンへの `{...}`）がビルドで失敗する
 
 ### 生成
-- [ ] `npm run build` で 4 つの生成先すべてが出力される
+- [x] `npm run build` で 4 つの生成先すべてが出力される
 - [ ] 生成物がコミット済みの内容と一致することを CI が検査する（生成忘れの検出）
 
 ### プレーン Web
-- [ ] `tokens.css` が `@layer tokens` 内で `:root` に変数を定義する
-- [ ] light / dark が `prefers-color-scheme` と明示指定の両方で切り替わる
+- [x] `tokens.css` が `@layer tokens` 内で `:root` に変数を定義する
+- [x] light / dark が `prefers-color-scheme` と明示指定の両方で切り替わる
 - [ ] 実ブラウザ（Safari / Chrome / Firefox）で OKLCH が意図した色で表示される
 
 ### Flutter
-- [ ] `tokens.g.dart` が `ThemeExtension` を実装し `lerp` / `copyWith` を持つ
+- [x] `tokens.g.dart` が `ThemeExtension` を実装し `lerp` / `copyWith` を持つ
 - [ ] `Theme.of(context).extension<YnTokens>()` から全トークンが取得できる
 - [ ] iOS / Android 実機でライト・ダーク切替が反映される
 

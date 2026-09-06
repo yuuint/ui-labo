@@ -1,0 +1,32 @@
+{
+  "$description": "役割。primitive のみを参照する。ダークテーマ",
+  "color": {
+    "$type": "color",
+    "bg":       { "$value": "{color.neutral.1000}" },
+    "surface":  { "$value": "{color.neutral.900}" },
+    "surface2": { "$value": "{color.neutral.800}" },
+    "sunken":   { "$value": "{color.neutral.950}" },
+    "ink":      { "$value": "{color.neutral.50}" },
+    "ink2":     { "$value": "{color.neutral.400}" },
+    "ink3":     { "$value": "{color.neutral.500}" },
+    "line":     { "$value": "{color.neutral.800}" },
+    "line2":    { "$value": "{color.neutral.700}" },
+    "accent":       { "$value": "{color.ai.400}" },
+    "accentHover":  { "$value": "{color.ai.400}" },
+    "accentWash":   { "$value": "{color.neutral.800}" },
+    "onAccent":     { "$value": "{color.neutral.1000}" },
+    "danger":       { "$value": "{color.shu.500}" },
+    "dangerWash":   { "$value": "{color.neutral.800}" },
+    "sea":       { "$value": "{color.neutral.950}" },
+    "landLine":  { "$value": "{color.neutral.1000}" },
+    "area": {
+      "$description": "ダークでは背景が沈むぶん明度を上げる。並びの濃淡は保つ",
+      "1":  { "$value": "oklch(0.635 0.088 252)" }, "2":  { "$value": "oklch(0.845 0.075 195)" },
+      "3":  { "$value": "oklch(0.695 0.088 150)" }, "4":  { "$value": "oklch(0.885 0.088 122)" },
+      "5":  { "$value": "oklch(0.745 0.095 88)" },  "6":  { "$value": "oklch(0.855 0.090 62)" },
+      "7":  { "$value": "oklch(0.665 0.105 32)" },  "8":  { "$value": "oklch(0.805 0.070 348)" },
+      "9":  { "$value": "oklch(0.645 0.085 295)" }, "10": { "$value": "oklch(0.745 0.075 232)" },
+      "11": { "$value": "oklch(0.875 0.078 135)" }
+    }
+  }
+}

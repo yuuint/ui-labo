@@ -1,0 +1,34 @@
+{
+  "$description": "役割。テーマで変わらない寸法・線・モーション。primitive のみを参照する",
+  "size": {
+    "$type": "dimension",
+    "control": {
+      "height": { "$value": "{size.field}", "$description": "入力欄と同じ高さ" },
+      "touch":  { "$value": "{size.touch}", "$description": "タップ領域の下限" }
+    },
+    "panel": {
+      "min": { "$value": "{size.popMin}" },
+      "max": { "$value": "{size.popMax}" }
+    }
+  },
+  "radius": {
+    "$type": "dimension",
+    "control": { "$value": "{radius.sm}" },
+    "panel":   { "$value": "{radius.lg}" },
+    "sheet":   { "$value": "{radius.xl}" },
+    "pill":    { "$value": "{radius.full}" }
+  },
+  "line": {
+    "$type": "dimension",
+    "hair":     { "$value": "{stroke.hair}",   "$description": "境界線" },
+    "dilate":   { "$value": "{stroke.medium}", "$description": "簡略化のズレを塞ぐ膨張ぶん" },
+    "emphasis": { "$value": "{stroke.thin}",   "$description": "ホバーの縁取り" },
+    "strong":   { "$value": "{stroke.thick}",  "$description": "選択の縁取り" }
+  },
+  "motion": {
+    "$type": "duration",
+    "quick": { "$value": "{duration.pop}" },
+    "sheet": { "$value": "{duration.sheet}" },
+    "zoom":  { "$value": "{duration.zoom}" }
+  }
+}

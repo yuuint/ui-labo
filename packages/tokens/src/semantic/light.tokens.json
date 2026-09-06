@@ -1,0 +1,32 @@
+{
+  "$description": "役割。primitive のみを参照する。ライトテーマ",
+  "color": {
+    "$type": "color",
+    "bg":       { "$value": "{color.neutral.100}", "$description": "ページの地" },
+    "surface":  { "$value": "{color.neutral.0}" },
+    "surface2": { "$value": "{color.neutral.50}" },
+    "sunken":   { "$value": "{color.neutral.200}" },
+    "ink":      { "$value": "{color.neutral.1000}" },
+    "ink2":     { "$value": "{color.neutral.600}" },
+    "ink3":     { "$value": "{color.neutral.500}" },
+    "line":     { "$value": "{color.neutral.200}" },
+    "line2":    { "$value": "{color.neutral.300}" },
+    "accent":       { "$value": "{color.ai.600}" },
+    "accentHover":  { "$value": "{color.ai.500}" },
+    "accentWash":   { "$value": "{color.ai.100}" },
+    "onAccent":     { "$value": "{color.neutral.0}" },
+    "danger":       { "$value": "{color.shu.600}" },
+    "dangerWash":   { "$value": "{color.shu.100}" },
+    "sea":       { "$value": "{color.neutral.200}", "$description": "地図の余白（海）" },
+    "landLine":  { "$value": "{color.neutral.0}",   "$description": "県境・エリア境の線" },
+    "area": {
+      "$description": "地図の塗り分け。エリアの並び順に割り当てる",
+      "1":  { "$value": "{color.map.1}" },  "2":  { "$value": "{color.map.2}" },
+      "3":  { "$value": "{color.map.3}" },  "4":  { "$value": "{color.map.4}" },
+      "5":  { "$value": "{color.map.5}" },  "6":  { "$value": "{color.map.6}" },
+      "7":  { "$value": "{color.map.7}" },  "8":  { "$value": "{color.map.8}" },
+      "9":  { "$value": "{color.map.9}" },  "10": { "$value": "{color.map.10}" },
+      "11": { "$value": "{color.map.11}" }
+    }
+  }
+}
