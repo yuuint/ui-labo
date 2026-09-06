@@ -1,0 +1,54 @@
+---
+name: plain-web-custom-elements
+title: プレーン Web は依存ゼロの Custom Elements で実装する
+status: 採用
+date: 2026-09-05
+---
+
+# プレーン Web は依存ゼロの Custom Elements で実装する
+
+## 背景
+
+`packages/core` は「フレームワークなしの素の Web」向けの実装であり、
+Vue 版・将来の他フレームワーク版の土台にもなる。
+実装方式として Lit などの Web Components ライブラリを使う選択肢がある。
+
+## 決定
+
+素の Custom Elements（`class extends HTMLElement`）で実装し、
+ランタイム依存を持たない。CSS は同居する `.css` に書き、Vue 版から再利用する。
+
+## 理由
+
+- ui-labo の目的は「フルスクラッチで UI コンポーネントを作る」こと自体にある。
+  Lit を挟むと、学習・実装の対象が Lit のリアクティブ層に置き換わり、
+  プロジェクトの目的と手段がずれる。
+- ランタイム依存ゼロなら、利用者は `<script type="module">` 1 行で使える。
+  Lit を使うと利用者側に約 5KB(gzip) の追加ロードと、
+  バージョン衝突（複数の Lit が同居する問題）の可能性が発生する。
+- CSS を Custom Elements と Vue で共有できるため、
+  「見た目は 1 箇所、振る舞いは各実装で自然に」という分担が成立する。
+  Lit の `static styles`（CSSStyleSheet）に閉じ込めると Vue から再利用しにくい。
+
+## 影響とトレードオフ
+
+- 属性の監視（`observedAttributes` / `attributeChangedCallback`）、
+  再レンダリング、プロパティと属性の同期を各コンポーネントで手書きすることになる。
+  コンポーネントが増えるほど定型コードが増える。
+- 上記は `packages/core/src/base/` に最小の基底クラスを置いて吸収する。
+  これも自作範囲とする。
+- Shadow DOM を使うか否かは本 ADR では決めない（spec 側で扱う）。
+  外部からのスタイル上書き可否に関わるため、コンポーネント契約の一部と考える。
+- 捨てた選択肢: Lit。定型コードの削減と引き換えに、
+  依存ゼロと CSS 共有の 2 点を失うため。
+
+## 再検討の条件
+
+- 基底クラス（`packages/core/src/base/`）が 300 行を超えた場合。
+  それは Lit の再実装に近づいている兆候であり、Lit 採用の方が保守コストが低い。
+- コンポーネント数が 20 を超え、定型コードの重複が実際にバグの原因になった場合。
+- 素の Custom Elements では実現できない要件（SSR 対応など）が発生した場合。
+
+## 関連
+
+- ADR `monorepo`（モノレポ構成）
