@@ -7,10 +7,37 @@ export const signedArea = (r) => {
   return s / 2;
 };
 export const area = (r) => Math.abs(signedArea(r));
+/** 頂点の平均。島を落とす判定などの粗い用途に使う */
 export const centroid = (r) => [
   r.reduce((s, p) => s + p[0], 0) / r.length,
   r.reduce((s, p) => s + p[1], 0) / r.length,
 ];
+
+/**
+ * 面積重心。頂点の平均だと、頂点が密な側（入り組んだ海岸線）へ寄ってしまう。
+ * 目印を図形の真ん中に置くにはこちらが要る。
+ */
+export function polygonCentroid(ring) {
+  let a = 0, cx = 0, cy = 0;
+  for (let i = 0; i < ring.length - 1; i++) {
+    const [x0, y0] = ring[i], [x1, y1] = ring[i + 1];
+    const f = x0 * y1 - x1 * y0;
+    a += f; cx += (x0 + x1) * f; cy += (y0 + y1) * f;
+  }
+  if (a === 0) return centroid(ring);
+  return [cx / (3 * a), cy / (3 * a)];
+}
+
+/** 複数リングの面積重み付き重心 */
+export function ringsCentroid(rings) {
+  let wsum = 0, cx = 0, cy = 0;
+  for (const r of rings) {
+    const w = area(r);
+    const [x, y] = polygonCentroid(r);
+    cx += x * w; cy += y * w; wsum += w;
+  }
+  return wsum ? [cx / wsum, cy / wsum] : centroid(rings[0]);
+}
 
 /** Douglas-Peucker。頂点を減らす */
 export function simplify(pts, tol) {

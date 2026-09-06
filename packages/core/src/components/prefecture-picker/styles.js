@@ -75,10 +75,11 @@ button, input { font: inherit; color: inherit; touch-action: manipulation }
   transform-origin: top center;
   opacity: var(--_co); transform: translateY(var(--_cy)) scale(var(--_cs)); visibility: hidden;
   transition: opacity var(--_d) var(--_ease), transform var(--_d) var(--_ease),
-              visibility 0s linear var(--_d);
+              height var(--_d) var(--_ease), visibility 0s linear var(--_d);
 }
 .panel.open { opacity: 1; transform: none; visibility: visible;
-  transition: opacity var(--_d) var(--_ease), transform var(--_d) var(--_ease), visibility 0s }
+  transition: opacity var(--_d) var(--_ease), transform var(--_d) var(--_ease),
+              height var(--_d) var(--_ease), visibility 0s }
 :host([transition="fade"])  .panel { --_cy: 0; --_cs: 1 }
 :host([transition="slide"]) .panel { --_cy: 10px; --_cs: 1; --_d: 240ms }
 :host([transition="none"])  .panel, :host([transition="none"]) .scrim { --_d: 0s }

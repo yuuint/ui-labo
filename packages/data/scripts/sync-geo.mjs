@@ -7,7 +7,7 @@
 import { writeFileSync, mkdirSync, existsSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { unzip, readDbf, readShpPolygons } from "./lib/shapefile.mjs";
-import { simplify, chaikin, signedArea, area, centroid } from "./lib/geom.mjs";
+import { simplify, chaikin, signedArea, area, centroid, ringsCentroid } from "./lib/geom.mjs";
 
 const URL_NE = "https://naciscdn.org/naturalearth/10m/cultural/ne_10m_admin_1_states_provinces.zip";
 const CACHE = fileURLToPath(new URL("../.cache/ne.zip", import.meta.url));
@@ -94,14 +94,15 @@ for (const code of [...prefs.keys()].sort()) {
   const t = code === "47" ? TO : T;
   const rings = prefs.get(code).rings.map((r) => r.map(([x, y]) => t(x, y)));
   const d = rings.map((r) => "M" + r.map(([a, b]) => `${a},${b}`).join(" ") + "Z").join("");
-  const all = rings.flat(), first = rings[0];
+  const all = rings.flat();
+  const [cx, cy] = ringsCentroid(rings);       // 目印を図形の真ん中に置くための面積重心
   paths[code] = {
     n: prefs.get(code).name,
     d,
     b: [r1(Math.min(...all.map((p) => p[0]))), r1(Math.min(...all.map((p) => p[1]))),
         r1(Math.max(...all.map((p) => p[0]))), r1(Math.max(...all.map((p) => p[1])))],
-    c: [r1(first.reduce((s, p) => s + p[0], 0) / first.length),
-        r1(first.reduce((s, p) => s + p[1], 0) / first.length)],
+    c: [r1(cx), r1(cy)],
+    a: Math.round(rings.reduce((s, r) => s + area(r), 0)),   // エリアの重心を出すための重み
   };
 }
 

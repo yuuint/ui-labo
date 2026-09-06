@@ -10,6 +10,26 @@ import { grouping, members } from "../../lib/grouping.js";
 import { formatPrefecture, formatArea, displayOf, toKey } from "../../lib/value.js";
 import { css } from "./styles.js";
 
+/** エリアの中心。所属県の面積で重み付けする（大きい県に引っぱられるのが自然） */
+function areaCenter(codes) {
+  let w = 0, x = 0, y = 0;
+  for (const c of codes) {
+    const o = PATHS[c]; if (!o) continue;
+    const a = o.a ?? 1;
+    x += o.c[0] * a; y += o.c[1] * a; w += a;
+  }
+  return w ? [x / w, y / w] : null;
+}
+
+/** "170ms" / "0.3s" / "0s" を数値へ */
+function durationMs(v) {
+  const t = String(v).trim();
+  if (!t) return 0;
+  const n = parseFloat(t);
+  if (!Number.isFinite(n)) return 0;
+  return t.endsWith("ms") ? n : n * 1000;
+}
+
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const sheet = new CSSStyleSheet();
 sheet.replaceSync(css);
@@ -189,6 +209,40 @@ export class YnPrefecturePicker extends YnElement {
   };
 
   // --- 描画 ---
+  #wasOpen = false;
+  #heightTimer = 0;
+  #onHeightEnd = (e) => {
+    if (e.propertyName === "height") this.#releaseHeight(e.currentTarget);
+  };
+  #releaseHeight(panel) {
+    clearTimeout(this.#heightTimer); this.#heightTimer = 0;
+    panel.style.height = "";
+  }
+
+  /**
+   * 中身の入れ替えで高さが変わるとき、その差を補間する。
+   * 地図と一覧では高さが大きく違い、そのまま入れ替えると跳ねる。
+   */
+  #renderPanelAnimated() {
+    const panel = this.shadowRoot.querySelector(".panel");
+    const from = panel.getBoundingClientRect().height;
+    panel.style.height = "";
+    this.#renderPanel();
+    if (!this.#open || !this.#wasOpen || !from) return;
+    const to = panel.getBoundingClientRect().height;
+    if (Math.abs(to - from) < 2) return;
+    // 遷移しない設定（transition="none" / prefers-reduced-motion）では高さを固定しない。
+    // 固定すると transitionend が来ず、その高さのまま張り付く
+    const ms = durationMs(getComputedStyle(panel).getPropertyValue("--_d"));
+    if (!ms) return;
+    panel.style.height = `${from}px`;
+    void panel.getBoundingClientRect();     // 開始の高さを確定させてから
+    panel.style.height = `${to}px`;
+    // 遷移が完了しなかった場合の保険（非表示タブなど）
+    clearTimeout(this.#heightTimer);
+    this.#heightTimer = setTimeout(() => this.#releaseHeight(panel), ms + 120);
+  }
+
   update() {
     const r = this.shadowRoot;
     if (!r.firstChild) {
@@ -199,9 +253,11 @@ export class YnPrefecturePicker extends YnElement {
         e.stopPropagation(); this.#open ? this.#close() : this.#openPanel();
       });
       r.querySelector(".scrim").addEventListener("click", () => this.#close());
+      r.querySelector(".panel").addEventListener("transitionend", this.#onHeightEnd);
     }
     this.#renderTrigger();
-    this.#renderPanel();
+    this.#renderPanelAnimated();
+    this.#wasOpen = this.#open;
     r.querySelector(".scrim").classList.toggle("open", this.#open);
     r.querySelector(".panel").classList.toggle("open", this.#open);
     this.#setFormValue();
@@ -376,17 +432,17 @@ export class YnPrefecturePicker extends YnElement {
       zoomed ? `${g.labels[this.#area]} の都道府県` : "日本地図");
   }
 
-  /** 選択中の目印。色に依存しない手がかり */
+  /** 選択中の目印。色に依存しない手がかり。図形の中心に置く */
   #checks(m, scale) {
     const pts = this.#isArea
-      ? this.#sel.map((k) => PATHS[m[k][Math.floor(m[k].length / 2)]].c)
+      ? this.#sel.map((k) => areaCenter(m[k] ?? []))
       : this.#selectedCodes()
           .filter((c) => this.#step !== "pref" || this.#group.keyOf(this.#byCode(c)) === this.#area)
           .map((c) => PATHS[c].c);
-    return pts.map(([cx, cy]) => {
-      const R = 13 / scale, w = 2.2 / scale, cy2 = cy - R * 2;
-      return `<g class="check" aria-hidden="true"><circle cx="${cx}" cy="${cy2}" r="${R}" stroke-width="${w}"/>`
-        + `<path d="M${cx - R * .44},${cy2} l${R * .32},${R * .36} l${R * .58},-${R * .7}" stroke-width="${w * 1.4}"/></g>`;
+    return pts.filter(Boolean).map(([cx, cy]) => {
+      const R = 13 / scale, w = 2.2 / scale;
+      return `<g class="check" aria-hidden="true"><circle cx="${cx}" cy="${cy}" r="${R}" stroke-width="${w}"/>`
+        + `<path d="M${cx - R * .44},${cy + R * .04} l${R * .32},${R * .36} l${R * .58},-${R * .7}" stroke-width="${w * 1.4}"/></g>`;
     }).join("");
   }
 
