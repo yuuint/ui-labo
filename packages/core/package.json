@@ -7,11 +7,14 @@
   "main": "./src/index.js",
   "exports": {
     ".": "./src/index.js",
-    "./prefecture-picker": "./src/components/prefecture-picker/yn-prefecture-picker.js",
-    "./tokens.css": "@ynetlabo/ui-tokens/dist/tokens.css"
+    "./prefecture-picker": "./src/components/prefecture-picker/yn-prefecture-picker.js"
   },
-  "files": ["src"],
-  "ynetlabo": { "externalDeps": "workspace-only" },
+  "files": [
+    "src"
+  ],
+  "ynetlabo": {
+    "externalDeps": "workspace-only"
+  },
   "dependencies": {
     "@ynetlabo/ui-data": "*",
     "@ynetlabo/ui-tokens": "*"
