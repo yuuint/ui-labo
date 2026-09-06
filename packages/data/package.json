@@ -1,0 +1,17 @@
+{
+  "name": "@ynetlabo/ui-data",
+  "version": "0.0.0",
+  "description": "ui-labo が 4 プラットフォームで共有するマスタデータ（都道府県・日本地図）",
+  "type": "module",
+  "license": "MIT",
+  "main": "./dist/prefectures.js",
+  "types": "./dist/prefectures.d.ts",
+  "files": ["dist", "src"],
+  "ynetlabo": { "externalDeps": "none" },
+  "scripts": {
+    "sync:data": "node scripts/sync-data.mjs",
+    "sync:geo": "node scripts/sync-geo.mjs",
+    "build": "node scripts/build.mjs",
+    "test": "node --test test/*.test.mjs"
+  }
+}
