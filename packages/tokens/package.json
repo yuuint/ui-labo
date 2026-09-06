@@ -1,6 +1,6 @@
 {
   "name": "@ynetlabo/ui-tokens",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "ui-labo のデザイントークン（DTCG 2025.10）と、各プラットフォームへの変換",
   "type": "module",
   "license": "MIT",
