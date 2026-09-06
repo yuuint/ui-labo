@@ -144,23 +144,28 @@ export class YnPrefecturePicker extends YnElement {
     if (!this.multiple) this.#sel = this.#sel.slice(0, 1);
   }
 
-  attributeChangedCallback(attr, oldV, newV) {
-    super.attributeChangedCallback(attr, oldV, newV);
-    if (attr === "value") { this.#syncFromValue(); return; }
-    // 値の意味が変わる指定は選択を破棄する
-    if (attr === "selection-level") { this.#sel = []; this.#syncValue(); return; }
-    if (attr === "grouping") { if (this.#isArea) this.#sel = []; this.#syncValue(); return; }
-    // 表現だけが変わる指定は、選択を保ったまま value を追随させる
-    if (attr === "code-format" || attr === "multiple") {
+  /**
+   * 属性・プロパティのどちらから変わってもここを通る。
+   * フレームワークは value をプロパティで渡すため、属性だけを見ていると取りこぼす。
+   */
+  propChanged(key) {
+    if (this.#internalWrite) return;              // 自分で書き戻した分は無視する
+    if (key === "value") return this.#syncFromValue();
+    if (key === "selectionLevel") { this.#sel = []; this.#syncValue(); return; }
+    if (key === "grouping") { if (this.#isArea) this.#sel = []; this.#syncValue(); return; }
+    if (key === "codeFormat" || key === "multiple") {
       if (!this.multiple) this.#sel = this.#sel.slice(0, 1);
       this.#syncValue();
     }
   }
 
+  #internalWrite = false;
   /** 選択から value を作り直す。設定変更による追随なので change は発火しない */
   #syncValue() {
     const next = this.#emitValue();
-    if (JSON.stringify(next) !== JSON.stringify(this.value)) this.value = next;
+    if (JSON.stringify(next) === JSON.stringify(this.value)) return;
+    this.#internalWrite = true;
+    try { this.value = next; } finally { this.#internalWrite = false; }
   }
 
   // --- 選択 ---
@@ -179,7 +184,8 @@ export class YnPrefecturePicker extends YnElement {
   }
   #commit() {
     const v = this.#emitValue();
-    this.value = v;
+    this.#internalWrite = true;
+    try { this.value = v; } finally { this.#internalWrite = false; }
     this.#setFormValue();
     this.emit("change", { value: v, keys: [...this.#sel] });
   }

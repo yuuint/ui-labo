@@ -26,6 +26,9 @@ export class YnElement extends HTMLElement {
         set: (v) => {
           if (this.#state[key] === v) return;      // 変わっていないなら何もしない
           this.#state[key] = v;
+          // 属性・プロパティのどちらから来ても、ここ 1 か所を通る。
+          // フレームワークはプロパティで値を渡すため、属性だけを見ていると取りこぼす
+          this.propChanged?.(key, v);
           this.requestUpdate();
         },
         enumerable: true,
