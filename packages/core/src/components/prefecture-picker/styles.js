@@ -84,6 +84,15 @@ button, input { font: inherit; color: inherit; touch-action: manipulation }
 :host([transition="slide"]) .panel { --_cy: 10px; --_cs: 1; --_d: 240ms }
 :host([transition="none"])  .panel, :host([transition="none"]) .scrim { --_d: 0s }
 
+/* ---- 常時表示（ダイアログにしない） ---- */
+:host([mode="inline"]) .panel {
+  position: static; width: 100%; min-width: 0; max-width: none;
+  box-shadow: none; visibility: visible; opacity: 1; transform: none;
+  transition: height var(--_dur) var(--_ease);
+}
+:host([mode="inline"]) .scrim { display: none }
+:host([mode="inline"]) .trigger[hidden] { display: none }
+
 .head { display: flex; align-items: center; gap: 7px; padding: 8px 9px; border-bottom: 1px solid var(--_line) }
 .back { display: inline-flex; align-items: center; height: 28px; padding: 0 9px;
   border: 1px solid var(--_line2); background: var(--_surface); border-radius: 6px;
@@ -171,6 +180,11 @@ svg { display: block; width: 100%; height: auto; max-height: min(56vh, 500px) }
     opacity: 0; visibility: hidden;
     transition: opacity var(--_sheetDur) ease, visibility 0s linear var(--_sheetDur) }
   .scrim.open { opacity: 1; visibility: visible; transition: opacity var(--_sheetDur) ease, visibility 0s }
+  :host([mode="inline"]) .panel { position: static; border-radius: var(--_panelR);
+    border-bottom: 1px solid var(--_line2); max-height: none; padding-bottom: 0 }
+  :host([mode="inline"]) .head { position: static; padding: 10px 10px 9px }
+  :host([mode="inline"]) .head::before { content: none }
+  :host([mode="inline"]) .search-row { position: static; padding: 8px 10px 0 }
   .panel { position: fixed; left: 0; right: 0; bottom: var(--_kb, 0px); top: auto;
     width: 100%; min-width: 0; max-width: none;
     border-radius: var(--_sheetR) var(--_sheetR) 0 0; border-bottom: 0;

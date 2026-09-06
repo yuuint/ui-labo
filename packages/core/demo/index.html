@@ -51,6 +51,9 @@
       <yn-prefecture-picker id="pp" name="prefecture"></yn-prefecture-picker>
       <label for="ct">市区町村・番地</label>
       <input id="ct" type="text" name="city" placeholder="渋谷区渋谷 1-2-3">
+      <p style="font-size:11.5px;color:var(--color-ink3);margin:14px 0 0">
+        mode="inline" にすると、ダイアログではなく常に表示されたままになります。
+      </p>
       <div class="out" id="out">change 待ち</div>
     </fieldset>
   </form>
@@ -63,6 +66,7 @@
 import "/packages/core/src/index.js";
 const pp = document.getElementById("pp"), out = document.getElementById("out");
 const PARAMS = {
+  mode: ["dropdown", "inline"],
   selectionLevel: ["prefecture", "area"],
   multiple: ["false", "true"],
   layout: ["map", "list"],

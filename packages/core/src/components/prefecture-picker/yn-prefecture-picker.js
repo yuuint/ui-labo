@@ -51,11 +51,12 @@ export class YnPrefecturePicker extends YnElement {
     invalid:          { type: "boolean", value: false },
     name:             { value: "" },
     transition:       { value: "auto" },
+    mode:             { value: "dropdown" },
     items:            { type: "json", value: null },
   };
 
   #sel = [];            // 内部キー（県コード / エリアキー）の配列
-  #open = false;
+  #openState = false;
   #step = "area";
   #area = null;
   #query = "";
@@ -70,6 +71,11 @@ export class YnPrefecturePicker extends YnElement {
   }
 
   // --- 派生 ---
+  /** 常時表示（inline）では開閉の概念を持たない */
+  get #inline() { return this.mode === "inline"; }
+  get #open() { return this.#inline || this.#openState; }
+  set #open(v) { this.#openState = v; }
+
   get #prefs() { return this.items ?? PREFECTURES; }
   get #isArea() { return this.selectionLevel === "area"; }
   get #group() { return grouping(this.grouping); }
@@ -122,7 +128,10 @@ export class YnPrefecturePicker extends YnElement {
     if (this.#fitKeyboard) visualViewport.removeEventListener("resize", this.#fitKeyboard);
   }
   #fitKeyboard = null;
-  #onOutside = (e) => { if (this.#open && !e.composedPath().includes(this)) this.#close(); };
+  #onOutside = (e) => {
+    if (this.#inline) return;                       // 常時表示では閉じない
+    if (this.#open && !e.composedPath().includes(this)) this.#close();
+  };
 
   /** value 属性・プロパティから内部キーへ。不正な値は未選択として扱う */
   #syncFromValue() {
@@ -192,7 +201,7 @@ export class YnPrefecturePicker extends YnElement {
   }
 
   #openPanel() { if (this.disabled) return; this.#open = true; this.#step = "area"; this.#area = null; this.#query = ""; this.updateNow(); }
-  #close() { this.#open = false; this.updateNow(); }
+  #close() { if (this.#inline) return; this.#open = false; this.updateNow(); }
   #pickArea(key) {
     if (this.#isArea) return this.#toggle(key);
     const ids = this.#members[key] ?? [];
@@ -204,6 +213,7 @@ export class YnPrefecturePicker extends YnElement {
   #onKeydown = (e) => {
     if (!this.#open || e.key !== "Escape") return;
     if (this.#effectiveLayout() === "map" && this.#step === "pref") this.#back();
+    else if (this.#inline) return;                  // 常時表示では閉じるものが無い
     else { this.#close(); this.shadowRoot.querySelector(".trigger")?.focus(); }
     e.preventDefault();
   };
@@ -255,10 +265,12 @@ export class YnPrefecturePicker extends YnElement {
       r.querySelector(".scrim").addEventListener("click", () => this.#close());
       r.querySelector(".panel").addEventListener("transitionend", this.#onHeightEnd);
     }
-    this.#renderTrigger();
+    r.querySelector(".trigger").hidden = this.#inline;
+    r.querySelector(".scrim").hidden = this.#inline;
+    if (!this.#inline) this.#renderTrigger();
     this.#renderPanelAnimated();
     this.#wasOpen = this.#open;
-    r.querySelector(".scrim").classList.toggle("open", this.#open);
+    r.querySelector(".scrim").classList.toggle("open", this.#open && !this.#inline);
     r.querySelector(".panel").classList.toggle("open", this.#open);
     this.#setFormValue();
   }
@@ -289,7 +301,8 @@ export class YnPrefecturePicker extends YnElement {
       + `<div class="modes" role="group" aria-label="表示の切り替え">`
       + `<button type="button" data-lay="map"${canMap ? "" : " disabled"} aria-pressed="${this.layout === "map"}">地図</button>`
       + `<button type="button" data-lay="list" aria-pressed="${this.layout === "list"}">リスト</button></div>`
-      + `<button class="close" type="button" aria-label="閉じる">✕</button></div>`;
+      + (this.#inline ? "" : `<button class="close" type="button" aria-label="閉じる">✕</button>`)
+      + `</div>`;
     if (this.searchable && !this.#isArea)
       h += `<div class="search-row"><input class="search" type="search" placeholder="とうきょう / tokyo / 東京" value="${esc(this.#query)}"></div>`;
     h += lay === "map" ? this.#mapHtml() : this.#listHtml();
