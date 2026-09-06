@@ -324,6 +324,11 @@ export class YnPrefecturePicker extends YnElement {
     this.#applyZoom(p);
   }
 
+  /**
+   * 押せるものにハンドラを付ける。
+   * 地図と一覧は**別々に**辿る。まとめて `[data-area]` を拾うと、
+   * 一覧の項目（同じ属性を持つ）に二重に付き、1 回のクリックで 2 回トグルしてしまう。
+   */
   #bindTargets(p, zoomed, setHere) {
     const g = this.#group, m = this.#members;
     const mark = (sel, on) => p.querySelectorAll(sel).forEach((n) => n.classList.toggle("hot", on));
@@ -332,9 +337,11 @@ export class YnPrefecturePicker extends YnElement {
       if (r) r.setAttribute("d", codes ? codes.map((c) => PATHS[c].d).join("") : "");
     };
     const rest = () => setHere(zoomed ? g.labels[this.#area] : "エリアを選ぶ");
+    const mapRoot = p.querySelector(".mapbox");
 
-    if (!zoomed) {
-      p.querySelectorAll("[data-area]").forEach((n) => {
+    if (mapRoot && !zoomed) {
+      // 全国: エリア単位で押す・光らせる
+      mapRoot.querySelectorAll("[data-area]").forEach((n) => {
         const k = n.dataset.area;
         n.addEventListener("click", (e) => { e.stopPropagation(); this.#pickArea(k); });
         n.addEventListener("mouseenter", () => { mark(`[data-area="${k}"]`, true); if (!this.#isArea) ring(m[k]); setHere(g.labels[k]); });
@@ -342,8 +349,9 @@ export class YnPrefecturePicker extends YnElement {
         n.addEventListener("focus", () => { mark(`[data-area="${k}"]`, true); setHere(g.labels[k]); });
         n.addEventListener("blur", () => { mark(`[data-area="${k}"]`, false); rest(); });
       });
-    } else {
-      p.querySelectorAll("[data-code]").forEach((n) => {
+    } else if (mapRoot) {
+      // 拡大中: 県単位で押す・光らせる
+      mapRoot.querySelectorAll("[data-code]").forEach((n) => {
         if (n.classList.contains("dim")) return;
         const c = n.dataset.code;
         n.addEventListener("click", (e) => { e.stopPropagation(); this.#toggle(c); });
@@ -351,8 +359,10 @@ export class YnPrefecturePicker extends YnElement {
         n.addEventListener("mouseleave", () => { mark(`[data-code="${c}"]`, false); ring(null); rest(); });
       });
       // 対象外（海・薄いエリア）を押したら全国へ戻す。ダイアログは閉じない
-      p.querySelector(".mapbox")?.addEventListener("click", (e) => { e.stopPropagation(); this.#back(); });
+      mapRoot.addEventListener("click", (e) => { e.stopPropagation(); this.#back(); });
     }
+
+    // 一覧は自分の項目だけを見る
     p.querySelectorAll(".opt[data-code]").forEach((n) =>
       n.addEventListener("click", (e) => { e.stopPropagation(); this.#toggle(n.dataset.code); }));
     p.querySelectorAll(".opt[data-area]").forEach((n) =>
