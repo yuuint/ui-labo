@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ui-labo — ynetlabo の UI コンポーネント</title>
+<meta name="description" content="フルスクラッチで作る UI コンポーネント集。プレーン Web / Vue / Flutter / SwiftUI の 4 実装が 1 つの仕様とデザイントークンを共有します。">
+<link rel="stylesheet" href="./lib/tokens.css">
+<link rel="stylesheet" href="./site.css">
+<script type="importmap">
+{ "imports": {
+  "@ynetlabo/ui-data": "./lib/data/prefectures.js",
+  "@ynetlabo/ui-data/outline": "./lib/data/japan-outline.js",
+  "@ynetlabo/ui-data/normalize": "./lib/data/normalize.js"
+} }
+</script>
+</head>
+<body>
+<div class="ribbon" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+<header>
+  <div class="bar">
+    <a class="brand" href="./index.html">ui-labo <span>/ ynetlabo</span></a>
+    <nav>
+      <a href="./index.html">概要</a>
+      <a href="./prefecture-picker.html">都道府県 Picker</a>
+      <a href="https://github.com/yuuint/ui-labo">GitHub</a>
+      <button id="theme" type="button" aria-label="配色を切り替える">☾</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="hero">
+    <p class="eyebrow">yuuint/ui-labo</p>
+    <h1>依存ゼロで書く、<br class="wide"><em>4 プラットフォーム共通</em>の UI</h1>
+    <p class="lede">
+      1 つの仕様とデザイントークンを、プレーン Web・Vue・Flutter・SwiftUI の
+      4 実装が共有します。まずはプレーン Web から。
+    </p>
+    <ul class="tags">
+      <li>Custom Elements</li>
+      <li>ランタイム依存 0</li>
+      <li>DTCG 2025.10</li>
+      <li>MIT</li>
+    </ul>
+  </div>
+
+  <section id="demo">
+    <p class="eyebrow">packages/core</p>
+    <h2>触ってみる</h2>
+    <p>下のものはこのページで実際に動いている <code>&lt;yn-prefecture-picker&gt;</code> です。
+      地図は公有ドメインのデータから自前で生成しています。</p>
+    <div class="stage">
+      <div class="stage-head"><b>yn-prefecture-picker</b><span>mode="inline" multiple</span></div>
+      <yn-prefecture-picker id="demo-picker" mode="inline" multiple></yn-prefecture-picker>
+      <div class="out" id="demo-out"></div>
+    </div>
+    <p style="margin-top:14px"><a href="./prefecture-picker.html">パラメータを全部試す →</a></p>
+  </section>
+
+  <section id="install">
+    <p class="eyebrow">npm</p>
+    <h2>使いはじめる</h2>
+    <p><code>@ynetlabo/ui-core</code> を入れると、データとトークンも一緒に入ります。</p>
+<pre><code>npm install @ynetlabo/ui-core</code></pre>
+    <p>読み込むのは CSS 1 本と module 1 行だけです。import した時点でカスタム要素が登録されます。</p>
+<pre><code><span class="c">&lt;!-- 色・寸法・モーションはすべてトークン経由 --&gt;</span>
+&lt;<span class="k">link</span> rel="stylesheet" href="node_modules/@ynetlabo/ui-tokens/dist/tokens.css"&gt;
+
+&lt;<span class="k">script</span> type="module"&gt;
+  import "@ynetlabo/ui-core";
+&lt;/<span class="k">script</span>&gt;
+
+&lt;<span class="k">yn-prefecture-picker</span> name="pref" code-format="jis"&gt;&lt;/<span class="k">yn-prefecture-picker</span>&gt;</code></pre>
+    <ul class="notes">
+      <li><code>form</code> の中に置けばそのまま送信されます（<code>ElementInternals</code> による参加）。</li>
+      <li>値の受け取りは <code>change</code> イベント。<code>event.detail.value</code> に入ります。</li>
+      <li>Vue で使うときは <code>isCustomElement</code> の設定と、値の <code>:value.prop</code> 束縛が必要です。</li>
+    </ul>
+  </section>
+
+  <section id="status">
+    <p class="eyebrow">docs/specs</p>
+    <h2>対応状況</h2>
+    <p>この表は各 spec の frontmatter から生成しています。手書きの台帳は持ちません。</p>
+    <!--#matrix-->
+    <ul class="notes">
+      <li><b>none</b> 未着手 / <b>draft</b> 実装中・公開 API は変わりうる /
+          <b>beta</b> 使えるが破壊的変更あり / <b>stable</b> 公開 API 確定</li>
+    </ul>
+  </section>
+
+  <section id="how">
+    <p class="eyebrow">設計</p>
+    <h2>決めていること</h2>
+    <ul class="notes">
+      <li><b>ランタイム依存を持たない。</b>素の Custom Elements で書きます。
+        利用者側に追加のロードもバージョン衝突もありません。</li>
+      <li><b>トークンは 3 層。</b>primitive → semantic → component の参照方向を
+        ビルド時に検査し、層をまたぐ近道を落とします。</li>
+      <li><b>データは 1 か所で作る。</b>都道府県マスタと地図の形状は生成スクリプトが作り、
+        Web / Dart / Swift の 3 つの生成物が同じ順序・同じ件数であることをテストが保証します。</li>
+      <li><b>仕様が先。</b>振る舞いを変えるときは spec を先に直します。
+        このサイトの表も spec から作っているので、放っておいてもずれません。</li>
+    </ul>
+    <p style="margin-top:14px">
+      判断の経緯は <a href="https://github.com/yuuint/ui-labo/tree/main/docs/adr">ADR</a>、
+      今どう動くかは <a href="https://github.com/yuuint/ui-labo/tree/main/docs/specs">spec</a> にあります。
+    </p>
+  </section>
+</main>
+
+<footer>
+  <div class="foot">
+    <span>© 2026 ynetlabo</span>
+    <a href="https://github.com/yuuint/ui-labo/blob/main/LICENSE">MIT</a>
+    <span class="sp"><a href="https://github.com/yuuint/ui-labo">github.com/yuuint/ui-labo</a></span>
+  </div>
+</footer>
+
+<script type="module">
+import "./lib/core/index.js";
+import { watch } from "./site.js";
+watch(document.getElementById("demo-picker"), document.getElementById("demo-out"));
+</script>
+</body>
+</html>

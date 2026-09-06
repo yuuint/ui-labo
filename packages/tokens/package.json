@@ -1,6 +1,6 @@
 {
   "name": "@ynetlabo/ui-tokens",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "ui-labo のデザイントークン（DTCG 2025.10）と、各プラットフォームへの変換",
   "type": "module",
   "license": "MIT",
@@ -15,5 +15,27 @@
   },
   "devDependencies": {
     "style-dictionary": "^5.5.2"
-  }
+  },
+  "homepage": "https://yuuint.github.io/ui-labo/",
+  "bugs": {
+    "url": "https://github.com/yuuint/ui-labo/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yuuint/ui-labo.git",
+    "directory": "packages/tokens"
+  },
+  "keywords": [
+    "design-tokens",
+    "dtcg",
+    "style-dictionary",
+    "ui-labo",
+    "ynetlabo"
+  ],
+  "sideEffects": [
+    "*.css"
+  ]
 }

@@ -1,6 +1,6 @@
 {
   "name": "@ynetlabo/ui-data",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "ui-labo が 4 プラットフォームで共有するマスタデータ（都道府県・日本地図）",
   "type": "module",
   "license": "MIT",
@@ -23,5 +23,27 @@
     ".": "./dist/prefectures.js",
     "./outline": "./dist/japan-outline.js",
     "./normalize": "./src/normalize.js"
-  }
+  },
+  "homepage": "https://yuuint.github.io/ui-labo/",
+  "bugs": {
+    "url": "https://github.com/yuuint/ui-labo/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yuuint/ui-labo.git",
+    "directory": "packages/data"
+  },
+  "keywords": [
+    "japan",
+    "prefecture",
+    "todofuken",
+    "geojson",
+    "svg",
+    "ui-labo",
+    "ynetlabo"
+  ],
+  "sideEffects": false
 }

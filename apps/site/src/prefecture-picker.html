@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>都道府県 Picker — ui-labo</title>
+<meta name="description" content="日本地図から都道府県・エリアを選ぶカスタム要素。コード表現・区切り・単数複数・埋め込み表示をパラメータで切り替えられます。">
+<link rel="stylesheet" href="./lib/tokens.css">
+<link rel="stylesheet" href="./site.css">
+<script type="importmap">
+{ "imports": {
+  "@ynetlabo/ui-data": "./lib/data/prefectures.js",
+  "@ynetlabo/ui-data/outline": "./lib/data/japan-outline.js",
+  "@ynetlabo/ui-data/normalize": "./lib/data/normalize.js"
+} }
+</script>
+</head>
+<body>
+<div class="ribbon" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+<header>
+  <div class="bar">
+    <a class="brand" href="./index.html">ui-labo <span>/ ynetlabo</span></a>
+    <nav>
+      <a href="./index.html">概要</a>
+      <a href="./prefecture-picker.html">都道府県 Picker</a>
+      <a href="https://github.com/yuuint/ui-labo">GitHub</a>
+      <button id="theme" type="button" aria-label="配色を切り替える">☾</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="hero">
+    <p class="eyebrow">yn-prefecture-picker</p>
+    <h1>都道府県 Picker</h1>
+    <p class="lede">
+      日本地図から都道府県・エリアを選びます。地図の形状は公有ドメインのデータから
+      自前で生成しており、外部のライブラリもタイルサーバも使いません。
+    </p>
+  </div>
+
+  <section id="try" style="padding-top:34px">
+    <div class="play">
+      <div>
+        <div class="stage">
+          <div class="stage-head"><b>実物</b><span id="attrs"></span></div>
+          <yn-prefecture-picker id="pp" name="pref"></yn-prefecture-picker>
+          <div class="out" id="out"></div>
+        </div>
+        <ul class="notes">
+          <li><code>mode="dropdown"</code> のときは上の枠を押すと開きます。600px 未満では下から出るシートになります。</li>
+          <li><code>selectionLevel="prefecture"</code> はエリアを選ぶと拡大し、そこから県を選ぶ 2 段階です。</li>
+          <li>「とうきょう」「tokyo」「toukyou」「東京」のどれでも同じ県に届きます。</li>
+        </ul>
+      </div>
+      <aside class="panel">
+        <h2>パラメータ</h2>
+        <div id="params"></div>
+      </aside>
+    </div>
+  </section>
+
+  <section id="api">
+    <p class="eyebrow">docs/specs/prefecture-picker</p>
+    <h2>API</h2>
+    <p>この表は spec から生成しています。実装と食い違うことがないよう、手書きしていません。</p>
+    <!--#api-prefecture-picker-->
+    <h3>イベント</h3>
+    <p>値が変わったとき <code>change</code> を発火し、<code>event.detail.value</code> に
+      <code>codeFormat</code> に従った値（複数選択では配列）を渡します。
+      選択が変わっていない場合は発火しません。</p>
+  </section>
+
+  <section id="codeformat">
+    <p class="eyebrow">codeFormat</p>
+    <h2>値の表現</h2>
+    <p>やり取りする値の形はパラメータで選べます。既定は JIS の 2 桁コードです。</p>
+    <!--#codeformat-prefecture-picker-->
+  </section>
+
+  <section id="grouping">
+    <p class="eyebrow">grouping</p>
+    <h2>区切り</h2>
+    <p>地方区分の流儀そのものを切り替えます。<code>region9</code> と <code>region11</code> では
+      三重県の所属が変わりますが、これは意図的なものです。</p>
+    <!--#grouping-prefecture-picker-->
+  </section>
+
+  <section id="embed">
+    <p class="eyebrow">mode="inline"</p>
+    <h2>画面に埋め込む</h2>
+    <p>選択そのものが主役の画面では、ダイアログを挟まず常に表示したままにできます。
+      親がクリア・確定のボタンを持っているなら、Picker 側のフッタは消せます。</p>
+<pre><code>&lt;<span class="k">yn-prefecture-picker</span>
+  mode="inline"
+  selection-level="area"
+  multiple
+  code-format="ynetlabo"
+  footer="count"
+  style="--prefecture-picker-map-max-height: 300px"&gt;
+&lt;/<span class="k">yn-prefecture-picker</span>&gt;</code></pre>
+    <ul class="notes">
+      <li>高さに上限のある枠に入れるときは、<code>--prefecture-picker-map-max-height</code> で地図を縮めます。</li>
+      <li>Vue / React は値をプロパティで渡すため、<code>:value.prop</code> のようにプロパティ束縛にします。</li>
+    </ul>
+  </section>
+</main>
+
+<footer>
+  <div class="foot">
+    <span>© 2026 ynetlabo</span>
+    <a href="https://github.com/yuuint/ui-labo/blob/main/LICENSE">MIT</a>
+    <a href="https://github.com/yuuint/ui-labo/blob/main/docs/specs/prefecture-picker.md">spec</a>
+    <span class="sp"><a href="https://github.com/yuuint/ui-labo">github.com/yuuint/ui-labo</a></span>
+  </div>
+</footer>
+
+<script type="module">
+import "./lib/core/index.js";
+import { watch, playground } from "./site.js";
+
+const pp = document.getElementById("pp");
+watch(pp, document.getElementById("out"));
+playground(pp, document.getElementById("params"), {
+  mode: ["dropdown", "inline"],
+  selectionLevel: ["prefecture", "area"],
+  multiple: ["false", "true"],
+  layout: ["map", "list"],
+  grouping: ["region9", "region8", "region11", "kana", "none"],
+  codeFormat: ["jis", "jisNumber", "ynetlabo", "iso", "name", "shortName"],
+  display: ["name", "shortName"],
+  searchable: ["true", "false"],
+  footer: ["auto", "none", "count", "count clear"],
+  transition: ["auto", "fade", "slide", "none"],
+  disabled: ["false", "true"],
+});
+
+// 今の指定を見出しに出す。既定値は属性にならないので、書いたものだけが並ぶ
+const attrs = document.getElementById("attrs");
+const show = () => {
+  const list = [...pp.attributes]
+    .filter((a) => a.name !== "id")
+    .map((a) => (a.value ? `${a.name}="${a.value}"` : a.name));
+  attrs.textContent = list.length ? list.join(" ") : "既定のまま";
+};
+new MutationObserver(show).observe(pp, { attributes: true });
+show();
+</script>
+</body>
+</html>

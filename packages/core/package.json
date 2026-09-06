@@ -1,6 +1,6 @@
 {
   "name": "@ynetlabo/ui-core",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "ui-labo のプレーン Web 実装。素の Custom Elements で書き、第三者ライブラリを使わない",
   "type": "module",
   "license": "MIT",
@@ -16,10 +16,35 @@
     "externalDeps": "workspace-only"
   },
   "dependencies": {
-    "@ynetlabo/ui-data": "*",
-    "@ynetlabo/ui-tokens": "*"
+    "@ynetlabo/ui-data": "^0.1.0",
+    "@ynetlabo/ui-tokens": "^0.1.0"
   },
   "scripts": {
     "test": "node --test test/*.test.mjs"
-  }
+  },
+  "homepage": "https://yuuint.github.io/ui-labo/",
+  "bugs": {
+    "url": "https://github.com/yuuint/ui-labo/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yuuint/ui-labo.git",
+    "directory": "packages/core"
+  },
+  "keywords": [
+    "web-components",
+    "custom-elements",
+    "design-system",
+    "japan",
+    "prefecture",
+    "ui-labo",
+    "ynetlabo"
+  ],
+  "sideEffects": [
+    "./src/index.js",
+    "./src/components/**/*.js"
+  ]
 }
