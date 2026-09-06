@@ -210,3 +210,15 @@ footer { border-top: 1px solid var(--color-line); margin-top: 40px }
   .stage { padding: 14px }
   th, td { padding: 8px 11px }
 }
+
+/* ---- パッケージ ---- */
+.pkgs { list-style: none; margin: 16px 0 0; padding: 0;
+  border: 1px solid var(--color-line); border-radius: var(--radius-md);
+  background: var(--color-surface); overflow: hidden }
+.pkgs li { display: grid; gap: 1px 14px; padding: 11px 14px;
+  border-bottom: 1px solid var(--color-line) }
+@media (min-width: 640px) { .pkgs li { grid-template-columns: 210px minmax(0, 1fr); align-items: baseline } }
+.pkgs li:last-child { border-bottom: 0 }
+.pkgs a { font-family: var(--mono); font-size: 12.5px; font-weight: 700; text-decoration: none }
+.pkgs a:hover { text-decoration: underline }
+.pkgs span { font-size: 13px; color: var(--color-ink2); line-height: 1.65 }

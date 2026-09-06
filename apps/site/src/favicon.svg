@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="ui-labo">
+  <!-- サイトの帯（地方区分の色）をそのまま印にする。濃地に見本を落とし込んだ形 -->
+  <defs><clipPath id="r"><rect x="7" y="7" width="50" height="50" rx="11"/></clipPath></defs>
+  <rect width="64" height="64" rx="15" fill="#191c22"/>
+  <g clip-path="url(#r)">
+    <g transform="rotate(-32 32 32)">
+      <rect x="-32" y="-14.0" width="128" height="10.4" fill="#3f6ea8"/>
+      <rect x="-32" y="-3.7" width="128" height="10.4" fill="#7fc4c9"/>
+      <rect x="-32" y="6.6" width="128" height="10.4" fill="#4f9a6f"/>
+      <rect x="-32" y="16.9" width="128" height="10.4" fill="#b3cf8a"/>
+      <rect x="-32" y="27.2" width="128" height="10.4" fill="#b39a5a"/>
+      <rect x="-32" y="37.5" width="128" height="10.4" fill="#c9945f"/>
+      <rect x="-32" y="47.8" width="128" height="10.4" fill="#a8564a"/>
+      <rect x="-32" y="58.1" width="128" height="10.4" fill="#c48fa8"/>
+      <rect x="-32" y="68.4" width="128" height="10.4" fill="#7d6bb0"/>
+    </g>
+  </g>
+</svg>

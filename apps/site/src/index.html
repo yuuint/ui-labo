@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ui-labo — ynetlabo の UI コンポーネント</title>
 <meta name="description" content="フルスクラッチで作る UI コンポーネント集。プレーン Web / Vue / Flutter / SwiftUI の 4 実装が 1 つの仕様とデザイントークンを共有します。">
+<!--#head-->
 <link rel="stylesheet" href="./lib/tokens.css">
 <link rel="stylesheet" href="./site.css">
 <script type="importmap">
@@ -23,6 +24,7 @@
     <nav>
       <a href="./index.html">概要</a>
       <a href="./prefecture-picker.html">都道府県 Picker</a>
+      <a href="https://www.npmjs.com/package/@ynetlabo/ui-core">npm</a>
       <a href="https://github.com/yuuint/ui-labo">GitHub</a>
       <button id="theme" type="button" aria-label="配色を切り替える">☾</button>
     </nav>
@@ -76,6 +78,26 @@
       <li><code>form</code> の中に置けばそのまま送信されます（<code>ElementInternals</code> による参加）。</li>
       <li>値の受け取りは <code>change</code> イベント。<code>event.detail.value</code> に入ります。</li>
       <li>Vue で使うときは <code>isCustomElement</code> の設定と、値の <code>:value.prop</code> 束縛が必要です。</li>
+    </ul>
+  </section>
+
+  <section id="packages">
+    <p class="eyebrow">npm</p>
+    <h2>パッケージ</h2>
+    <p>3 つに分かれています。<code>@ynetlabo/ui-core</code> を入れれば残り 2 つも一緒に入ります。</p>
+    <ul class="pkgs">
+      <li>
+        <a href="https://www.npmjs.com/package/@ynetlabo/ui-core">@ynetlabo/ui-core</a>
+        <span>プレーン Web 実装。素の Custom Elements、ランタイム依存ゼロ</span>
+      </li>
+      <li>
+        <a href="https://www.npmjs.com/package/@ynetlabo/ui-tokens">@ynetlabo/ui-tokens</a>
+        <span>デザイントークン。CSS / TypeScript / Dart / Swift へ変換済み</span>
+      </li>
+      <li>
+        <a href="https://www.npmjs.com/package/@ynetlabo/ui-data">@ynetlabo/ui-data</a>
+        <span>都道府県マスタと日本地図の形状。4 実装が同じ値を見る</span>
+      </li>
     </ul>
   </section>
 
