@@ -1,0 +1,20 @@
+name: CI
+on:
+  push: { branches: [main] }
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      # 宣言外の依存の検出。ADR package-manager でこの検査を外さないと決めている
+      - run: npm run check:deps
+      - run: npm run build
+      - run: npm test
+      # 生成物のコミット忘れを検出する。ここで差分が出たら build を実行して push する
+      - name: 生成物が最新か
+        run: git diff --exit-code -- packages/*/src/*.json packages/*/dist

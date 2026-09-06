@@ -1,0 +1,14 @@
+{
+  "name": "@ynetlabo/ui-labo",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "engines": { "node": ">=20" },
+  "workspaces": ["packages/*", "apps/*"],
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "check:deps": "node tools/check-deps.mjs",
+    "check": "npm run check:deps && npm run build && npm run test"
+  }
+}

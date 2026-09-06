@@ -1,0 +1,6 @@
+node_modules/
+.DS_Store
+*.log
+
+# 取得した元データ。生成物だけをコミットする（ADR data-snapshot-from-api / japan-map-geodata）
+packages/data/.cache/
