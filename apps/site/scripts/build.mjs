@@ -25,6 +25,7 @@ const DIST = join(HERE, "dist");
  */
 const CONFIG = JSON.parse(readFileSync(join(HERE, "site.config.json"), "utf8"));
 const GA4 = process.env.GA_MEASUREMENT_ID ?? CONFIG.ga4;
+if (GA4 && !/^G-[A-Z0-9]{10}$/.test(GA4)) throw new Error(`GA4 の測定 ID の形が違う: ${GA4}`);
 
 const PLATFORMS = [
   ["web", "プレーン Web"],
