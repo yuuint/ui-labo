@@ -77,7 +77,7 @@
     <ul class="notes">
       <li><code>form</code> の中に置けばそのまま送信されます（<code>ElementInternals</code> による参加）。</li>
       <li>値の受け取りは <code>change</code> イベント。<code>event.detail.value</code> に入ります。</li>
-      <li>Vue で使うときは <code>isCustomElement</code> の設定と、値の <code>:value.prop</code> 束縛が必要です。</li>
+      <li>Vue からは <code>@ynetlabo/ui-vue</code> を使うと <code>v-model</code> で書けます。SSR もそのまま通ります。</li>
     </ul>
   </section>
 
@@ -89,6 +89,10 @@
       <li>
         <a href="https://www.npmjs.com/package/@ynetlabo/ui-core">@ynetlabo/ui-core</a>
         <span>プレーン Web 実装。素の Custom Elements、ランタイム依存ゼロ</span>
+      </li>
+      <li>
+        <a href="https://www.npmjs.com/package/@ynetlabo/ui-vue">@ynetlabo/ui-vue</a>
+        <span>Vue 3 向けラッパー。<code>v-model</code> と型付きの props で使える</span>
       </li>
       <li>
         <a href="https://www.npmjs.com/package/@ynetlabo/ui-tokens">@ynetlabo/ui-tokens</a>

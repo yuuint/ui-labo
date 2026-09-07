@@ -36,8 +36,12 @@ sheet.replaceSync(css);
 
 export class YnPrefecturePicker extends YnElement {
   static formAssociated = true;
+  /**
+   * **value は最後に置く。** 値の解釈は codeFormat と selectionLevel に依るため、
+   * 設定より先に読むと別の表現として解釈され、正しい値が捨てられる。
+   * 基底クラスは、定義前に入れられたプロパティをこの順で通す。
+   */
   static props = {
-    value:            { value: null, reflect: false },
     selectionLevel:   { value: "prefecture" },
     multiple:         { type: "boolean", value: false },
     codeFormat:       { value: "jis" },
@@ -54,6 +58,7 @@ export class YnPrefecturePicker extends YnElement {
     mode:             { value: "dropdown" },
     footer:           { value: "auto" },
     items:            { type: "json", value: null },
+    value:            { value: null, reflect: false },
   };
 
   #sel = [];            // 内部キー（県コード / エリアキー）の配列
@@ -515,4 +520,7 @@ export class YnPrefecturePicker extends YnElement {
   }
 }
 
-customElements.define("yn-prefecture-picker", YnPrefecturePicker);
+// 二重登録で落とさない。ラッパー（@ynetlabo/ui-vue）と本体の両方を
+// 入れた利用者の木に core が 2 つ並ぶことがあるため
+if (!customElements.get("yn-prefecture-picker"))
+  customElements.define("yn-prefecture-picker", YnPrefecturePicker);

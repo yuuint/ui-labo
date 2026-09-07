@@ -1,0 +1,52 @@
+{
+  "name": "@ynetlabo/ui-vue",
+  "version": "0.1.3",
+  "description": "ui-labo の Vue 向けラッパー。core のカスタム要素を v-model と型付きの props で使えるようにする",
+  "type": "module",
+  "license": "MIT",
+  "main": "./src/index.js",
+  "types": "./src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "default": "./src/index.js"
+    }
+  },
+  "files": [
+    "src"
+  ],
+  "sideEffects": false,
+  "dependencies": {
+    "@ynetlabo/ui-core": "^0.1.3"
+  },
+  "peerDependencies": {
+    "vue": "^3.4.0"
+  },
+  "devDependencies": {
+    "@vue/server-renderer": "^3.5.0",
+    "vue": "^3.5.0"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  },
+  "keywords": [
+    "vue",
+    "web-components",
+    "japan",
+    "prefecture",
+    "ui-labo",
+    "ynetlabo"
+  ],
+  "homepage": "https://ui.ynetlabo.net/",
+  "bugs": {
+    "url": "https://github.com/yuuint/ui-labo/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yuuint/ui-labo.git",
+    "directory": "packages/vue"
+  }
+}

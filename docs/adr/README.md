@@ -17,6 +17,7 @@
 | [doc-naming](doc-naming.md) — spec と ADR は通し番号を持たず、物理名で識別する | 採用 | 2026-09-06 |
 | [japan-map-geodata](japan-map-geodata.md) — 地図の県境は Natural Earth（パブリックドメイン）を簡略化して同梱する | 採用 | 2026-09-06 |
 | [package-manager](package-manager.md) — JS ワークスペースは npm workspaces で管理する | 採用 | 2026-09-06 |
+| [vue-wraps-custom-element](vue-wraps-custom-element.md) — Vue 版はカスタム要素を包む。作り直さない | 採用 | 2026-09-07 |
 
 ## spec との役割分担
 

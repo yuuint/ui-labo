@@ -1,6 +1,6 @@
 {
   "name": "@ynetlabo/ui-data",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "ui-labo が 4 プラットフォームで共有するマスタデータ（都道府県・日本地図）",
   "type": "module",
   "license": "MIT",

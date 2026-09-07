@@ -16,15 +16,20 @@ export class YnElement extends HTMLElement {
   #frame = 0;
   #ready = false;
   #reflectingAttr = null;
+  #pending = null;
 
   constructor() {
     super();
     const props = this.constructor.props;
     for (const [key, def] of Object.entries(props)) {
       // 定義前の要素にフレームワークが値を入れていることがある。
-      // そのまま defineProperty すると消えるので、いったん退避して後から入れ直す
-      const pending = Object.hasOwn(this, key) ? this[key] : undefined;
-      delete this[key];
+      // そのまま defineProperty すると消えるので、いったん退避しておく。
+      // ここで入れ直してはいけない。サブクラスのフィールド初期化は super() の
+      // あとに走るため、setter から propChanged へ入ると未初期化の私有フィールドに触る
+      if (Object.hasOwn(this, key)) {
+        (this.#pending ??= new Map()).set(key, this[key]);
+        delete this[key];
+      }
 
       this.#state[key] = def.value;
       Object.defineProperty(this, key, {
@@ -40,13 +45,18 @@ export class YnElement extends HTMLElement {
         },
         enumerable: true,
       });
-
-      if (pending !== undefined) this[key] = pending;
     }
   }
 
   connectedCallback() {
     if (!this.#ready) { this.#ready = true; this.setup?.(); }
+    // 退避しておいた値は setup のあとで通す。属性より後なので、
+    // 両方から来ていればプロパティが勝つ（より明示的な指定だから）
+    if (this.#pending) {
+      const pending = this.#pending;
+      this.#pending = null;
+      for (const [key, v] of pending) this[key] = v;
+    }
     // 初回は同期で描く。次のフレームに任せると、非表示タブや
     // バックグラウンドでは requestAnimationFrame が発火せず一度も描画されない
     this.updateNow();

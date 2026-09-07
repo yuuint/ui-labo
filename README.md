@@ -10,6 +10,7 @@ ynetlabo の UI コンポーネント集。1 つの仕様とデザイントー�
 | パッケージ | 中身 |
 |---|---|
 | [`@ynetlabo/ui-core`](packages/core) | プレーン Web 実装（素の Custom Elements、ランタイム依存ゼロ） |
+| [`@ynetlabo/ui-vue`](packages/vue) | Vue 3 向けラッパー。`v-model` と型付きの props |
 | [`@ynetlabo/ui-tokens`](packages/tokens) | デザイントークン（DTCG 2025.10）と CSS / Dart / Swift への変換 |
 | [`@ynetlabo/ui-data`](packages/data) | 都道府県マスタと日本地図の形状。4 実装が同じ値を見る |
 

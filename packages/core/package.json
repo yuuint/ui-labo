@@ -1,6 +1,6 @@
 {
   "name": "@ynetlabo/ui-core",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "ui-labo のプレーン Web 実装。素の Custom Elements で書き、第三者ライブラリを使わない",
   "type": "module",
   "license": "MIT",
@@ -16,8 +16,8 @@
     "externalDeps": "workspace-only"
   },
   "dependencies": {
-    "@ynetlabo/ui-data": "^0.1.0",
-    "@ynetlabo/ui-tokens": "^0.1.0"
+    "@ynetlabo/ui-data": "^0.1.3",
+    "@ynetlabo/ui-tokens": "^0.1.3"
   },
   "scripts": {
     "test": "node --test test/*.test.mjs"

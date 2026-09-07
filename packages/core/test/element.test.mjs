@@ -11,6 +11,13 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 
 class FakeHTMLElement {
+  /** 昇格を模すための仕込み。super() で入るので、YnElement の本体より先に own になる */
+  static staged = null;
+
+  constructor() {
+    if (FakeHTMLElement.staged) Object.assign(this, FakeHTMLElement.staged);
+  }
+
   #attrs = new Map();
   #pending = [];
   #draining = false;
@@ -38,6 +45,8 @@ class FakeHTMLElement {
       this.attributeChangedCallback?.(n, o, v);
     }
   }
+
+  isConnected = true;
 
   /** HTML に属性が書かれた要素が、あとから定義されて昇格する場面を模す */
   upgradeWith(pairs) {
@@ -117,5 +126,59 @@ test("属性から来た変更も propChanged を 1 回だけ通る", () => {
   const el = new Sample();
   el.setAttribute("selection-level", "area");
   assert.deepEqual(el.seen, [["selectionLevel", "area"]]);
+  assert.equal(el.selectionLevel, "area");
+});
+
+
+/**
+ * 定義より先にフレームワークが値をプロパティで入れる場面。
+ * Vue は要素の定義を動的 import で後から読むため、この順序が普通に起きる。
+ */
+test("定義前に入れられたプロパティが、昇格で要素を壊さず、あとから通る", () => {
+  class Strict extends YnElement {
+    static props = {
+      mode: { value: "dropdown" },
+      selectionLevel: { value: "prefecture" },
+      multiple: { type: "boolean", value: false },
+    };
+    // サブクラスのフィールド初期化は super() のあと。
+    // constructor の中から propChanged を呼ぶと、ここがまだ無い
+    #log = [];
+    #ready = false;
+    setup() { this.#ready = true; }
+    propChanged(key) { this.#log.push(key); }
+    get log() { return this.#log; }
+    get didSetup() { return this.#ready; }
+  }
+
+  FakeHTMLElement.staged = { selectionLevel: "area", multiple: true };
+  let el;
+  assert.doesNotThrow(() => { el = new Strict(); }, "昇格そのものが落ちてはいけない");
+  FakeHTMLElement.staged = null;
+
+  // まだ通っていない。setup の前に propChanged へ入ると私有フィールドが無い
+  assert.equal(el.selectionLevel, "prefecture");
+  assert.deepEqual(el.log, []);
+
+  el.connectedCallback();
+
+  assert.ok(el.didSetup, "setup が先に走る");
+  assert.equal(el.selectionLevel, "area");
+  assert.equal(el.multiple, true);
+  assert.deepEqual(el.log.slice().sort(), ["multiple", "selectionLevel"]);
+  assert.equal(el.getAttribute("selection-level"), "area", "属性にも書き戻る");
+});
+
+test("属性とプロパティの両方から来たら、プロパティが勝つ", () => {
+  class Sample2 extends YnElement {
+    static props = { selectionLevel: { value: "prefecture" } };
+  }
+  FakeHTMLElement.staged = { selectionLevel: "area" };
+  const el = new Sample2();
+  FakeHTMLElement.staged = null;
+
+  el.upgradeWith([["selection-level", "prefecture"]]);   // HTML 側の指定
+  assert.equal(el.selectionLevel, "prefecture");
+  el.connectedCallback();                                // 退避した値はここで通る
   assert.equal(el.selectionLevel, "area");
 });

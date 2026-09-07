@@ -4,7 +4,7 @@ title: 都道府県 Picker
 status: approved
 platforms:
   web: draft
-  vue: none
+  vue: draft
   flutter: none
   swiftui: none
 ---
@@ -588,6 +588,8 @@ semantic 層のみを参照し、primitive を直接参照しない。
 |---|---|---|
 | 全般 | `value` の型は `codeFormat` に対応する素の型。enum は補助 API として別途公開する | `codeFormat` で表現が変わる以上、値の型を固定できない |
 | Web | `grouping` のカスタム定義は属性ではなくプロパティで渡す | HTML 属性は文字列しか取れない |
+| Vue | core のカスタム要素を包む。Vue 用の描画を持たない | 地図の描画を 2 か所に置かないため（ADR `vue-wraps-custom-element`） |
+| Vue | SSR では要素だけを出し、中身は描かない | カスタム要素の登録はクライアントでしか行えない |
 | Web | `name` 指定時、`ElementInternals` でフォーム送信に参加する。複数選択では同名で複数送る | 素の HTML フォームから使えることを保証するため |
 | Web / Vue | トリガ直下にポップオーバーを開く | 画面下端に近い場合は上方向へ反転する |
 | Flutter | 画面幅が 600 未満のとき modal bottom sheet、以上でポップオーバー | モバイルでのポップオーバーは片手操作で届きにくい |
@@ -709,8 +711,12 @@ semantic 層のみを参照し、primitive を直接参照しない。
 - [ ] VoiceOver / NVDA で選択肢・選択状態・段階が読み上げられる（手動）
 
 ### Vue
-- [ ] `v-model` で値を双方向にバインドできる（複数選択では配列）
-- [ ] core の CSS を再利用し、Vue 用に別途スタイルを持たない
+- [x] `v-model` で値を双方向にバインドできる（複数選択では配列）
+- [x] core の CSS を再利用し、Vue 用に別途スタイルを持たない
+- [x] 利用側に `isCustomElement` の設定を要求しない
+- [x] SSR で DOM に触らない（要素だけを出し、登録はクライアントで行う）
+- [x] 指定しなかった prop は core の既定を倒さない
+- [ ] Nuxt の実アプリで、フォーム参加と検索クエリまで通しで動く
 
 ### Flutter
 - [ ] `YnPrefecturePicker` がトークンを `ThemeExtension` から解決する
