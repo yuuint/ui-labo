@@ -1,6 +1,6 @@
 {
   "name": "@ynetlabo/ui-vue",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "ui-labo の Vue 向けラッパー。core のカスタム要素を v-model と型付きの props で使えるようにする",
   "type": "module",
   "license": "MIT",
@@ -21,7 +21,7 @@
   ],
   "sideEffects": false,
   "dependencies": {
-    "@ynetlabo/ui-core": "^0.1.3"
+    "@ynetlabo/ui-core": "^0.1.4"
   },
   "peerDependencies": {
     "vue": "^3.4.0"
