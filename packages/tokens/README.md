@@ -35,4 +35,4 @@ npm install @ynetlabo/ui-tokens
 `primitive`（生の値）→ `semantic`（役割）→ `component`（部品ごと）の順に参照します。
 `component` から `primitive` を直接参照する近道はビルド時に検出して落とします。
 
-MIT © ynetlabo
+MIT © Yuuki.U ([ynetlabo](https://ynetlabo.net))

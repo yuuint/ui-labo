@@ -4,6 +4,10 @@
   "description": "ui-labo のプレーン Web 実装。素の Custom Elements で書き、第三者ライブラリを使わない",
   "type": "module",
   "license": "MIT",
+  "author": {
+    "name": "ynetlabo",
+    "url": "https://ynetlabo.net"
+  },
   "main": "./src/index.js",
   "exports": {
     ".": "./src/index.js",

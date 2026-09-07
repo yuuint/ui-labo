@@ -4,11 +4,16 @@
   "description": "ui-labo が 4 プラットフォームで共有するマスタデータ（都道府県・日本地図）",
   "type": "module",
   "license": "MIT",
+  "author": {
+    "name": "ynetlabo",
+    "url": "https://ynetlabo.net"
+  },
   "main": "./dist/prefectures.js",
   "types": "./dist/prefectures.d.ts",
   "files": [
     "dist",
-    "src"
+    "src",
+    "NOTICE"
   ],
   "ynetlabo": {
     "externalDeps": "none"

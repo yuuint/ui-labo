@@ -74,7 +74,8 @@ spec から生成しているため、spec が唯一のソースです。
 
 ## ライセンス
 
-MIT © ynetlabo
+MIT © Yuuki.U ([ynetlabo](https://ynetlabo.net))
 
+同梱データの素性は [`packages/data/NOTICE`](packages/data/NOTICE) にまとめています。
 地図の形状は [Natural Earth](https://www.naturalearthdata.com/)（パブリックドメイン）を
-加工して生成しています（ADR `japan-map-geodata`）。
+加工して生成したもので、**利用にあたって追加の義務はありません**（ADR `japan-map-geodata`）。

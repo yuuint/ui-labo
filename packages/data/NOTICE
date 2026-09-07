@@ -1,0 +1,37 @@
+@ynetlabo/ui-data
+Copyright (c) 2026 Yuuki.U (ynetlabo) https://ynetlabo.net
+
+このパッケージは MIT ライセンスで配布されます（LICENSE を参照）。
+同梱しているデータの素性を以下に記します。**利用にあたって追加の義務はありません。**
+
+
+## 日本地図の形状（dist/japan-outline.js, src/japan-outline.json）
+
+Natural Earth の `ne_10m_admin_1_states_provinces` から日本の 47 件を取り出し、
+簡略化・平滑化・投影して生成したものです。
+
+  https://www.naturalearthdata.com/
+
+Natural Earth の配布条件（原文）:
+
+  All versions of Natural Earth raster + vector map data found on this website are
+  in the public domain. You may use the maps in any manner, including modifying the
+  content and design, electronic dissemination, and offset printing. The primary
+  authors, Tom Patterson and Nathaniel Vaughn Kelso, and all other contributors
+  renounce all financial claim to the maps and invite you to use them for personal,
+  educational, and commercial purposes.
+
+  No permission is needed to use Natural Earth. Crediting the authors is unnecessary.
+
+出典の明記は**義務ではありません**が、データの素性を追えるようにここに記しています。
+加工の内容と手順は `scripts/sync-geo.mjs`、判断の経緯は
+リポジトリの `docs/adr/japan-map-geodata.md` にあります。
+
+
+## 都道府県マスタ（dist/prefectures.js ほか）
+
+ynetlabo API（https://api.ynetlabo.net）の応答を、ビルド時のスナップショットとして
+固定値で同梱したものです。著作権者は上記と同一です。
+
+読み・ローマ字・検索キーは、API が持たないフィールドとしてこのリポジトリ側で
+用意しています（`src/prefectures.supplement.json`）。

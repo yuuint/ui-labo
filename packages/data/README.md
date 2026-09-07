@@ -35,4 +35,7 @@ PREFECTURES[12];
 - 地図の形状: [Natural Earth](https://www.naturalearthdata.com/)（パブリックドメイン）を
   簡略化・平滑化して生成
 
-MIT © ynetlabo
+配布条件の原文と加工の内容は、同梱の [NOTICE](NOTICE) にまとめています。
+**利用にあたって追加の義務はありません。**
+
+MIT © Yuuki.U ([ynetlabo](https://ynetlabo.net))

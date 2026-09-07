@@ -67,4 +67,4 @@ app.use(YnLaboUi);
 picker.value.element   // <yn-prefecture-picker>
 ```
 
-MIT © ynetlabo
+MIT © Yuuki.U ([ynetlabo](https://ynetlabo.net))

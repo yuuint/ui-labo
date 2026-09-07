@@ -4,6 +4,10 @@
   "description": "ui-labo のデザイントークン（DTCG 2025.10）と、各プラットフォームへの変換",
   "type": "module",
   "license": "MIT",
+  "author": {
+    "name": "ynetlabo",
+    "url": "https://ynetlabo.net"
+  },
   "files": [
     "dist",
     "src",

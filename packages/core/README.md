@@ -41,4 +41,4 @@ vue: { compilerOptions: { isCustomElement: (tag) => tag.startsWith("yn-") } }
 <yn-prefecture-picker :value.prop="pref" @change="pref = $event.detail.value" />
 ```
 
-MIT © ynetlabo
+MIT © Yuuki.U ([ynetlabo](https://ynetlabo.net))

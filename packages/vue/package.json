@@ -4,6 +4,10 @@
   "description": "ui-labo の Vue 向けラッパー。core のカスタム要素を v-model と型付きの props で使えるようにする",
   "type": "module",
   "license": "MIT",
+  "author": {
+    "name": "ynetlabo",
+    "url": "https://ynetlabo.net"
+  },
   "main": "./src/index.js",
   "types": "./src/index.d.ts",
   "exports": {
